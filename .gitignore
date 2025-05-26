@@ -1,0 +1,13 @@
+# Virtualenv
+.venv/
+.env/
+__pycache__/
+*.pyc
+Pipfile.lock
+
+# VSCode settings (si usas)
+.vscode/
+
+# Node (si tienes frontend en la misma repo)
+node_modules/
+dist/
