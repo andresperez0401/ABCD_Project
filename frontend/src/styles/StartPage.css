@@ -1,55 +1,58 @@
+/* --------------------------------------------------
+   Layout general
+   -------------------------------------------------- */
 .start-page {
-  padding-top: 70px;
+  padding-top: 70px; /* espacio bajo el navbar */
   display: flex;
   flex-direction: column;
   align-items: center;
   background: linear-gradient(to left, #ffffff, #a2e794);
 }
 
-
+/* --------------------------------------------------
+   Sección texto + globo
+   -------------------------------------------------- */
 .globe-section {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 2rem; /* espacio entre texto y globo */
+  gap: 2rem;
   width: 100%;
-  padding: 2rem 1rem; /* espacio arriba/abajo */
-  background: linear-gradient(to left, #ffffff, #a2e794);
+  min-height: calc(100vh - 70px);
+  padding: 2rem 1rem;
   box-sizing: border-box;
 }
 
+/* Texto junto al globo */
 .globe-text {
   max-width: 400px;
   color: #333;
 }
-
 .globe-text h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
-
 .globe-text p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
 }
-
 .globe-text ul {
   list-style: disc inside;
-  padding-left: 0;
   margin: 0;
+  padding: 0;
 }
-
 .globe-text li {
   margin-bottom: 0.5rem;
 }
 
+/* Contenedor circular del globo */
 .globo-container {
   width: 50vw;
-  height: min(50vw, 90vh);
+  aspect-ratio: 1 / 1;
   max-width: 600px;
   max-height: 600px;
-  margin: 80px auto;
+  margin: 0;
   position: relative;
   border-radius: 50%;
   overflow: hidden;
@@ -58,4 +61,48 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Courses section */
+.courses-section {
+  width: 100%;
+  background: #f9f9f9;
+  padding: 4rem 1rem;
+  box-sizing: border-box;
+}
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+/* --------------------------------------------------
+   Responsive para móvil
+   -------------------------------------------------- */
+@media (max-width: 768px) {
+  .globe-section {
+    flex-direction: column;
+    padding: 1.5rem;
+    min-height: calc(100vh - 70px);
+  }
+  .globe-text {
+    text-align: center;
+  }
+  .globo-container {
+    width: 80vw;
+    height: 80vw; /* mantiene aspecto 1:1 */
+    max-width: none;
+    max-height: none;
+    margin-top: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------
+   Siguiente sección (placeholder)
+   -------------------------------------------------- */
+.more-info {
+  width: 100%;
+  padding: 2rem 1rem;
+  background: #fff;
 }

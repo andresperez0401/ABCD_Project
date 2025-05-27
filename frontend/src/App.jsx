@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import injectContext from "./store/appContext.jsx";
 import Navbar from './components/Navbar.jsx';
 import StartPage from './components/StartPage.jsx';
+import WhatsAppButton from "./components/WhatsAppButton.jsx";
 
 const AppContent = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const AppContent = () => {
         <Route path="/" element={<StartPage />} />
         {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
+      <WhatsAppButton />
       {!hideLayout && <Footer />}
 
       {/* Para alertas y notificaciones de la app */}

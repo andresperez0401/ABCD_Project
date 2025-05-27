@@ -1,30 +1,41 @@
-import React from 'react';
-import Navbar from './Navbar';
-import GloboCursos from './GloboCursos';
-import '../styles/StartPage.css';
+import React from "react";
+import Navbar from "./Navbar";
+import GloboCursos from "./GloboCursos";
+import CourseCards from "./CourseCards";
+import "../styles/StartPage.css";
 
 const StartPage = () => (
   <div className="start-page">
     <Navbar />
 
-    <div className="globe-section">
+    {/* Sección principal con texto + globo */}
+    <section className="globe-section">
       <div className="globe-text">
-        <h1>Bienvenido a ABCD Languages</h1>
+        <h1 style={{ fontFamily: '"Trebuchet MS", sans-serif' }}>
+          Bienvenido a ABCD Languages
+        </h1>
         <p>
-          Aprende idiomas con la mejor plataforma. 
-          Explora nuestros cursos en todo el mundo haciendo click en un país.
+          Aprende el idioma de tu elección en los mejores destinos
+          internacionales.
         </p>
-        <ul>
-          <li>Inglés en UK</li>
-          <li>Español en Spain</li>
-          <li>Japonés en Japan</li>
-          <li>Portugués en Brazil</li>
-        </ul>
+        <p>
+          Explora los países resaltados.{" "}
+          <strong>Gira el globo y haz clic para conocer nuestros cursos.</strong>
+        </p>
       </div>
       <div className="globo-container">
         <GloboCursos />
       </div>
-    </div>
+    </section>
+
+    {/* Sección independiente de cartas */}
+    <section className="courses-section">
+      <h2 className="section-title">Nuestros Cursos Destacados</h2>
+      <CourseCards />
+    </section>
+
+    {/* Más secciones abajo… */}
+    <section className="more-info">{/* … */}</section>
   </div>
 );
 

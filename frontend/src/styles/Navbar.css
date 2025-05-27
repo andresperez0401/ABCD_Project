@@ -1,15 +1,19 @@
 .navbar {
-  display: flex;
+  position: fixed;
+  top: 0; left: 0;
   width: 100%;
+  min-height: 70px;   /* permite crecer cuando el menú se expanda */
+  padding: 0 1rem;    /* separaciones horizontales */
+  display: flex;
+  align-items: center;
   background: linear-gradient(to right, #f0f0f0, #f0f0f0);
   border-bottom: 1px solid #9b9b9b;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 70px;
   z-index: 999;
 }
 
+.navbar .navbar-collapse {
+  margin-top: 0.5rem;
+}
 .navbar-title {
   font-family: 'Pacifico', cursive;
   font-weight: 400;
