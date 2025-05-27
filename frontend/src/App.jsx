@@ -1,10 +1,13 @@
 import React from 'react';
 import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './App.css'
 import { ToastContainer } from "react-toastify";
 import injectContext from "./store/appContext.jsx";
-
+import Navbar from './components/Navbar.jsx';
+import StartPage from './components/StartPage.jsx';
 
 const AppContent = () => {
   const location = useLocation();
@@ -20,7 +23,7 @@ const AppContent = () => {
     <>
       <Routes>
         <Route path="/" element={<StartPage />} />
-        <Route path="/home" element={<ListPaddel />} />
+        {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
       {!hideLayout && <Footer />}
 
@@ -45,7 +48,6 @@ function App() {
   return (
     <div className="App">
         <Router>
-          <h1> HOLAAA</h1>
           <AppContentWithFlux />
         </Router>
     </div>

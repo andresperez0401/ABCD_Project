@@ -1,0 +1,27 @@
+.navbar {
+  display: flex;
+  width: 100%;
+  background: linear-gradient(to right, #f0f0f0, #f0f0f0);
+  border-bottom: 1px solid #9b9b9b;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 70px;
+  z-index: 999;
+}
+
+.navbar-title {
+  font-family: 'Pacifico', cursive;
+  font-weight: 400;
+  font-size: 2rem;
+  color: #000;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Ajuste para que el contenido no se meta debajo
+body {
+  padding-top: 70px; /* empuja todo el contenido debajo del navbar */
+ /*}
