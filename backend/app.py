@@ -28,11 +28,41 @@ Migrate(app, db, compare_type=True)
 
 #---------------------------------------------------- Termina la BD configuración -----------------------------------------------------
 
-#----------------------------------------------------- Rutas -----------------------------------------------------
 
+#----------------------------------------------------- Rutas --------------------------------------------------------------------------
+
+#Ruta base
 @app.route('/')
 def index():
     return jsonify({"mensaje": "Hola desde Flask!"})
+
+#Ruta para agregar un usuario
+@app.route('/usuarios', methods=['POST'])
+def crear_usuario():
+    data = request.get_json()
+
+    nuevo_usuario = Usuario(
+        nombre=data.get('nombre'),
+        email=data.get('email'),
+        clave=data.get('clave'),
+        telefono=data.get('telefono'),
+        tipo=data.get('tipo')
+    )
+
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    return jsonify({"mensaje": "Usuario creado exitosamente", "usuario": nuevo_usuario.serialize()}), 201
+
+
+# Ruta para obtener todos los usuarios
+@app.route('/usuarios', methods=['GET'])
+def obtener_usuarios():
+    usuarios = Usuario.query.all()
+    return jsonify([u.serialize() for u in usuarios]), 200
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)  # Ejecuta la aplicación en el puerto 5000	
