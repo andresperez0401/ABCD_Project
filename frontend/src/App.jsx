@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import injectContext from "./store/appContext.jsx";
 import Navbar from './components/Navbar.jsx';
 import StartPage from './components/StartPage.jsx';
-import WhatsAppButton from "./components/WhatsAppButton.jsx";
+import WhatsAppButton from "./components/WhatsappButton.jsx";
 
 const AppContent = () => {
   const location = useLocation();
