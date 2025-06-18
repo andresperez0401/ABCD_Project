@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-cors = "*"
+sqlalchemy = "*"
+alembic = "*"
 
 [dev-packages]
 
@@ -14,4 +16,3 @@ python_version = "3.13"
 
 [scripts]
 start="flask run -p 3001 -h 0.0.0.0"
-
