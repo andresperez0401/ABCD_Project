@@ -18,6 +18,7 @@
     "@types/react-router-dom": "^5.3.3",
     "bootstrap": "^5.3.6",
     "globe.gl": "^2.41.5",
+    "next": "^15.3.5",
     "postprocessing": "^6.37.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

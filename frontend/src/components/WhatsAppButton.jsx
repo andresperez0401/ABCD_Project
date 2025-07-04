@@ -4,7 +4,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import "../styles/WhatsAppButton.css";
 
 const WhatsAppButton = () => {
-  const phoneNumber = "584144208885";
+  const phoneNumber = "584142677943";
 
   const handleClick = () => {
     window.open(`https://wa.me/${phoneNumber}`, "_blank");

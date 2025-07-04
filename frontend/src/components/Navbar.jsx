@@ -38,6 +38,9 @@ export const Navbar = () => {
               <a className="nav-link" href="#">Servicios</a>
             </li>
             <li className="nav-item">
+              <a className="nav-link" href="#">Cursos</a>
+            </li>
+            <li className="nav-item">
               <a className="nav-link" href="#">Contacto</a>
             </li>
           </ul>

@@ -63,6 +63,5 @@ def obtener_usuarios():
 
 
 
-
 if __name__ == '__main__':
     app.run(debug=True, port=5000)  # Ejecuta la aplicación en el puerto 5000	
