@@ -1,9 +1,7 @@
-// src/components/VideoTestimonials.jsx
 import React, { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "../styles/VideoTestimonials.css";
 
-// URLs de videos funcionales
 const testimonials = [
   {
     name: "María Pérez",
@@ -33,42 +31,19 @@ const testimonials = [
 
 const VideoTestimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [slidesToShow, setSlidesToShow] = useState(3);
   const [isHovering, setIsHovering] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-
-  // Calcular cuántos slides mostrar según el tamaño de pantalla
-  useEffect(() => {
-    const updateSlides = () => {
-      if (window.innerWidth < 576) {
-        setSlidesToShow(1);
-      } else if (window.innerWidth < 992) {
-        setSlidesToShow(2);
-      } else {
-        setSlidesToShow(3);
-      }
-    };
-
-    updateSlides();
-    window.addEventListener('resize', updateSlides);
-    return () => window.removeEventListener('resize', updateSlides);
-  }, []);
 
   const goNext = () => {
     setCurrentIndex(prev => 
-      prev >= testimonials.length - slidesToShow ? 0 : prev + 1
+      prev === testimonials.length - 1 ? 0 : prev + 1
     );
   };
 
   const goPrev = () => {
     setCurrentIndex(prev => 
-      prev === 0 ? testimonials.length - slidesToShow : prev - 1
+      prev === 0 ? testimonials.length - 1 : prev - 1
     );
-  };
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
   };
 
   // Manejar gestos táctiles
@@ -76,18 +51,12 @@ const VideoTestimonials = () => {
     setTouchStart(e.targetTouches[0].clientX);
   };
 
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 50) {
-      // Deslizar izquierda
-      goNext();
-    } else if (touchEnd - touchStart > 50) {
-      // Deslizar derecha
-      goPrev();
-    }
+  const handleTouchEnd = (e) => {
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    
+    if (diff > 50) goNext();
+    else if (diff < -50) goPrev();
   };
 
   return (
@@ -100,7 +69,6 @@ const VideoTestimonials = () => {
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         <button 
@@ -112,18 +80,11 @@ const VideoTestimonials = () => {
         </button>
         
         <div className="carousel-track">
-          <div 
-            className="carousel-slides" 
-            style={{ 
-              transform: `translateX(-${currentIndex * (100 / slidesToShow)}%)`,
-              width: `${testimonials.length * (100 / slidesToShow)}%`
-            }}
-          >
+          <div className="carousel-slides">
             {testimonials.map((testimonial, index) => (
               <div 
                 key={index} 
-                className="video-slide"
-                style={{ width: `${100 / slidesToShow}%` }}
+                className={`video-slide ${index === currentIndex ? 'active' : ''}`}
               >
                 <div className="video-container">
                   <iframe
@@ -152,11 +113,11 @@ const VideoTestimonials = () => {
       </div>
       
       <div className="carousel-dots">
-        {Array.from({ length: testimonials.length - slidesToShow + 1 }).map((_, index) => (
+        {testimonials.map((_, index) => (
           <button
             key={index}
             className={`dot ${index === currentIndex ? 'active' : ''}`}
-            onClick={() => goToSlide(index)}
+            onClick={() => setCurrentIndex(index)}
             aria-label={`Ir a testimonio ${index + 1}`}
           />
         ))}
