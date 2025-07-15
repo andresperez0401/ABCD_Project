@@ -14,8 +14,8 @@ const StartPage = () => (
     <section className="globe-section">
       <div className="globe-text">
         <h1 style={{ fontFamily: '"Roboto", sans-serif' }}>
-          Aprende el idioma de tu elección en los mejores destinos
-          internacionales.
+          Aprende idiomas en los mejores destinos
+          internacionales
         </h1>
         <p>
           Explora los países resaltados.{" "}
