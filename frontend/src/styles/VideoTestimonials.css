@@ -1,0 +1,107 @@
+/* src/components/VideoTestimonials.css */
+.video-section {
+  background: #f8f9fa;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+.video-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-family: 'Trebuchet MS', sans-serif;
+  position: relative;
+}
+
+.video-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #42a5f5, #1e88e5);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+/* Grid simple y eficiente */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Tarjeta de video compacta */
+.video-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
+}
+
+.video-card:hover {
+  transform: translateY(-3px);
+}
+
+.video-wrapper {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 ratio */
+  overflow: hidden;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.video-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+  color: #2c3e50;
+}
+
+.video-meta {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .video-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .video-grid {
+    gap: 1rem;
+  }
+  
+  .video-info {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}
