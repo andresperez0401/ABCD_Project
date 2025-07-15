@@ -6,21 +6,20 @@ import "../styles/GloboCursos.css";
 
 Modal.setAppElement("#root");
 
-
 export default function GloboCursos() {
   const globeEl = useRef();
   const [world, setWorld] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  //Cargamos los paises desde el contexto
-  const {store, actions} = useContext(Context);
+  // Cargamos los paises desde el contexto
+  const { store } = useContext(Context);
 
-  //Paises
+  // Países
   const SELECTED_COUNTRIES = store.SELECTED_COUNTRIES;
 
-  //Info de los cursos
+  // Info de los cursos
   const cursos = store.infoPaises;
-
 
   // 1) Cargar GeoJSON
   useEffect(() => {
@@ -29,9 +28,26 @@ export default function GloboCursos() {
       .then(data => setWorld(data.features));
   }, []);
 
-  // 2) Inicializar Globe
+  // Actualizar dimensiones al cambiar tamaño
   useEffect(() => {
-    if (!globeEl.current || !world.length) return;
+    const updateDimensions = () => {
+      if (globeEl.current?.parentElement) {
+        const container = globeEl.current.parentElement;
+        setDimensions({
+          width: container.clientWidth,
+          height: container.clientHeight
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
+  // 2) Inicializar y actualizar Globe
+  useEffect(() => {
+    if (!globeEl.current || !world.length || !dimensions.width) return;
 
     // textura negra 1×1
     const BLACK_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEUAAAD///+l2Z/dAAAACklEQVQI12NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
@@ -54,28 +70,29 @@ export default function GloboCursos() {
         setSelected(curso);
       })
       .onPolygonHover(() => null)
-      // tamaño igual al padre (.globo-container)
-      .width(globeEl.current.parentElement.clientWidth)
-      .height(globeEl.current.parentElement.clientHeight)
+      .width(dimensions.width)
+      .height(dimensions.height)
       .pointOfView({ lat: 0, lng: 0, altitude: 1.2 }, 0);
 
     // Retina & antialias
-    globe.renderer().setPixelRatio(window.devicePixelRatio);
+    globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio, 2));
     globe.renderer().antialias = true;
+    
     // Bloquear zoom
     globe.controls().enableZoom = false;
 
     // Ajuste en resize
     const handleResize = () => {
-      const w = globeEl.current.parentElement.clientWidth;
-      globe.width(w).height(w);
+      const container = globeEl.current.parentElement;
+      globe.width(container.clientWidth).height(container.clientHeight);
     };
+
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
       globeEl.current.innerHTML = "";
     };
-  }, [world]);
+  }, [world, dimensions, SELECTED_COUNTRIES, cursos]);
 
   return (
     <>
@@ -87,24 +104,40 @@ export default function GloboCursos() {
           onRequestClose={() => setSelected(null)}
           style={{
             overlay: {
-              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: "rgba(51, 51, 51, 0.8)", zIndex: 10000
+              position: "fixed", 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0,
+              backgroundColor: "rgba(51, 51, 51, 0.8)", 
+              zIndex: 10000
             },
             content: {
               position: "absolute",
-              top: "50%", left: "50%",
+              top: "50%", 
+              left: "50%",
               transform: "translate(-50%, -50%)",
-              background: "#fff", color: "#222",
-              maxWidth: "400px", width: "90%",
-              padding: "30px", borderRadius: "10px",
+              background: "#fff", 
+              color: "#222",
+              maxWidth: "400px", 
+              width: "90%",
+              padding: "30px", 
+              borderRadius: "10px",
               boxShadow: "0 0 20px rgba(0,0,0,0.8)",
-              border: "none", zIndex: 10001
+              border: "none", 
+              zIndex: 10001
             }
           }}
         >
           <header className="modal-header">
             <h2>{selected.name}</h2>
-            <button className="modal-close" onClick={() => setSelected(null)}>×</button>
+            <button 
+              className="modal-close" 
+              onClick={() => setSelected(null)}
+              aria-label="Cerrar modal"
+            >
+              ×
+            </button>
           </header>
           <div className="modal-body">
             <p>{selected.description}</p>

@@ -190,7 +190,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .globe-text h1 {
     font-size: 1.7rem;
   }
@@ -207,4 +207,15 @@
   .section-title {
     font-size: 1.6rem;
   }
+
+  .video-section {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .carousel-container {
+    padding: 0 5px;
+  }
 }
+
+
+
