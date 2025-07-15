@@ -1,30 +1,28 @@
-.cards-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  width: 100%;
+/* Contenedor principal del carrusel */
+.course-carousel-container {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 40px;
 }
 
-/* Carta base */
+.cards-wrapper {
+  display: flex;
+  gap: 2rem;
+  transition: transform 0.5s ease;
+  justify-content: center;
+}
+
 .card {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-  transform: translateY(40px);
-  opacity: 0;
-  transition: transform 0.6s ease, opacity 0.6s ease;
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-}
-
-/* Cuando entra en viewport */
-.card.show {
-  transform: translateY(0);
-  opacity: 1;
 }
 
 /* Imagen */
@@ -86,15 +84,167 @@
   transform: translateY(-2px);
 }
 
-/* Responsive: ajustar padding */
-@media (max-width: 600px) {
+/* Botones de navegación */
+.carousel-button {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: #a2e794; /* Color verde acorde al tema */
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.carousel-button.visible {
+  opacity: 1;
+}
+
+.carousel-button:hover {
+  background: #8fd9a1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-button.prev {
+  left: -10px;
+}
+
+.carousel-button.next {
+  right: -10px;
+}
+
+/* Indicadores */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 12px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #d1d8e0;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: #a2e794; /* Color verde acorde al tema */
+  transform: scale(1.2);
+}
+
+.dot:hover {
+  background: #8fd9a1;
+}
+
+/* ============================================= */
+/* Responsive */
+/* ============================================= */
+@media (max-width: 1200px) {
+  .course-carousel-container {
+    padding: 0 30px;
+  }
+  
+  .carousel-button {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 992px) {
+  .cards-wrapper {
+    gap: 1.5rem;
+  }
+  
+  .card-content {
+    padding: 1.2rem;
+  }
+  
+  .carousel-button {
+    opacity: 1; /* Siempre visibles en tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .course-carousel-container {
+    padding: 0 20px;
+  }
+  
+  .cards-wrapper {
+    gap: 1rem;
+  }
+  
+  .card {
+    min-width: 280px;
+  }
+  
+  .carousel-button {
+    width: 40px;
+    height: 40px;
+    top: 35%;
+  }
+}
+
+@media (max-width: 576px) {
+  .course-carousel-container {
+    padding: 0 15px;
+  }
+  
+  .cards-wrapper {
+    gap: 0.5rem;
+  }
+  
   .card-content {
     padding: 1rem;
   }
+  
   .card-content h3 {
     font-size: 1.1rem;
   }
-  .card-desc {
+  
+  .card-info li {
+    font-size: 0.85rem;
+  }
+  
+  .card-btn {
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
+  }
+  
+  .carousel-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .carousel-dots {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    min-width: 260px;
+  }
+  
+  .card-content {
+    padding: 0.8rem;
+  }
+  
+  .carousel-button {
+    width: 32px;
+    height: 32px;
+    top: 32%;
   }
 }

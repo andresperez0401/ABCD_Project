@@ -8,9 +8,10 @@ Modal.setAppElement("#root");
 
 export default function GloboCursos() {
   const globeEl = useRef();
+  const containerRef = useRef();
   const [world, setWorld] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [globeSize, setGlobeSize] = useState(0);
 
   // Cargamos los paises desde el contexto
   const { store } = useContext(Context);
@@ -31,34 +32,49 @@ export default function GloboCursos() {
   // Actualizar dimensiones al cambiar tamaño
   useEffect(() => {
     const updateDimensions = () => {
-      if (globeEl.current?.parentElement) {
-        const container = globeEl.current.parentElement;
-        setDimensions({
-          width: container.clientWidth,
-          height: container.clientHeight
-        });
+      if (containerRef.current) {
+        const container = containerRef.current;
+        const size = Math.min(
+          container.clientWidth, 
+          container.clientHeight
+        );
+        setGlobeSize(size);
       }
     };
 
     updateDimensions();
+    
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+    
     window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      resizeObserver.disconnect();
+    };
   }, []);
 
   // 2) Inicializar y actualizar Globe
   useEffect(() => {
-    if (!globeEl.current || !world.length || !dimensions.width) return;
+    if (!globeEl.current || !world.length || !globeSize) return;
 
     // textura negra 1×1
-    const BLACK_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEUAAAD///+l2Z/dAAAACklEQVQI12NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
+    // const BLACK_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEUAAAD///+l2Z/dAAAACklEQVQI12NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
+    const TRANSPARENT_PIXEL = 
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB" +
+  "CAQAAAC1HAwCAAAAC0lEQVQImWNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
 
     const globe = Globe()(globeEl.current)
       .showGlobe(true)
-      .globeImageUrl(BLACK_PIXEL)
+      .globeImageUrl(TRANSPARENT_PIXEL)    // ← Usa el transparente, no el negro
+      .backgroundImageUrl(null)            // ← Quita cualquier skybox oscuro
+      .backgroundColor("#87cefa")
       .showGraticules(false)
       .polygonsData(world)
       .polygonCapColor(({ properties: d }) =>
-        SELECTED_COUNTRIES.includes(d.name) ? "#ffffff" : "#444444"
+        SELECTED_COUNTRIES.includes(d.name) ? "#ffffff" : "#2f4f4f"
       )
       .polygonSideColor(() => "rgba(0,0,0,0)")
       .polygonStrokeColor(() => "#222222")
@@ -70,8 +86,8 @@ export default function GloboCursos() {
         setSelected(curso);
       })
       .onPolygonHover(() => null)
-      .width(dimensions.width)
-      .height(dimensions.height)
+      .width(globeSize)
+      .height(globeSize)
       .pointOfView({ lat: 0, lng: 0, altitude: 1.2 }, 0);
 
     // Retina & antialias
@@ -80,23 +96,43 @@ export default function GloboCursos() {
     
     // Bloquear zoom
     globe.controls().enableZoom = false;
+    
+    // Rotación automática suave
+    globe.controls().autoRotate = true;
+    globe.controls().autoRotateSpeed = 0.5;
 
-    // Ajuste en resize
+    // Ajustar tamaño al cambiar
     const handleResize = () => {
-      const container = globeEl.current.parentElement;
-      globe.width(container.clientWidth).height(container.clientHeight);
+      if (containerRef.current) {
+        const size = Math.min(
+          containerRef.current.clientWidth, 
+          containerRef.current.clientHeight
+        );
+        globe.width(size).height(size);
+      }
     };
 
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-      globeEl.current.innerHTML = "";
+      if (globeEl.current) globeEl.current.innerHTML = "";
     };
-  }, [world, dimensions, SELECTED_COUNTRIES, cursos]);
+  }, [world, globeSize, SELECTED_COUNTRIES, cursos]);
 
   return (
     <>
-      <div className="globe-canvas" ref={globeEl} />
+      <div className="globe-container" ref={containerRef}>
+        <div 
+          className="globe-canvas" 
+          ref={globeEl} 
+          style={{ 
+            width: `${globeSize}px`, 
+            height: `${globeSize}px`,
+            borderRadius: "50%",
+            overflow: "hidden"
+          }} 
+        />
+      </div>
 
       {selected && (
         <Modal

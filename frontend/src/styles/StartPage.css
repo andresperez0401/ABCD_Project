@@ -56,8 +56,8 @@
   position: relative;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #000;
-  box-shadow: 0 0 40px rgba(0,0,0,0.7);
+  background-color:  #87cefa;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -217,5 +217,100 @@
   }
 }
 
+/* Añadir al final de StartPage.css */
+.courses-section {
+  padding-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .courses-section {
+    padding: 2rem 1rem;
+  }
+  
+  .section-title {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .courses-section {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+}
 
 
+
+
+
+
+/* --------------------------------------------------
+   Contenedor circular del globo - VERSIÓN SIMPLIFICADA
+   -------------------------------------------------- */
+.globo-container {
+  width: 50vw;
+  aspect-ratio: 1 / 1;
+  max-width: 600px;
+  max-height: 600px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #000;
+  box-shadow: 0 0 40px rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --------------------------------------------------
+   Responsive para móvil
+   -------------------------------------------------- */
+@media (max-width: 768px) {
+  .globe-section {
+    flex-direction: column;
+    padding: 1.5rem;
+    min-height: calc(100vh - 70px);
+  }
+  
+  .globo-container {
+    width: 80vw;
+    max-width: none;
+    max-height: none;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .globo-container {
+    width: 85vw;
+  }
+}
+
+/* ============================================= */
+/* Ajustes específicos para iPad 10.2
+/* ============================================= */
+@media (width: 810px) and (height: 1080px) {
+  /* Dimensiones específicas para iPad 10.2" */
+  .globo-container {
+    width: 70vw;
+    max-width: 500px;
+    max-height: 500px;
+  }
+  
+  .globe-text h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (width: 1080px) and (height: 810px) {
+  /* iPad 10.2" en landscape */
+  .globo-container {
+    width: 45vw;
+    max-width: 500px;
+    max-height: 500px;
+  }
+}
