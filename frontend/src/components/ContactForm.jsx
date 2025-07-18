@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import { db } from '../store/firebase.js';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const ContactForm = ({ onSubmit }) => {
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoegDKYaRCNOpubKJUXEUmUKw0c5bTBHBdaoBKVoJGrw-HYhSH2pmJExri-_fEMoh21Q/exec';
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,61 +31,50 @@ const ContactForm = ({ onSubmit }) => {
   };
 
   const handlePhoneChange = (value) => {
-    setFormData(prev => ({ ...prev, phone: value }));
+    setFormData(prev => ({ ...prev, phone: value || '' }));
   };
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-  const newErrors = validate();
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-  setIsSubmitting(true);
-  setSubmitStatus(null);
-
-  try {
-    const callbackName = `googleScriptCallback_${Date.now()}`;
-
-    window[callbackName] = (response) => {
-      if (response.success) {
-        setSubmitStatus({ type: 'success', message: response.message });
-        setFormData({ name: '', email: '', phone: '', interests: '' });
-      } else {
-        setSubmitStatus({ type: 'error', message: response.message });
-      }
+    try {
+      // Guardar en Firestore
+      const docRef = await addDoc(collection(db, "contactos"), {
+        ...formData,
+        fecha: serverTimestamp(),
+        origen: "formulario-web"
+      });
+      
+      console.log("Documento guardado con ID:", docRef.id);
+      
+      // Opcional: ejecutar callback adicional
+      if(onSubmit) onSubmit(formData);
+      
+      setSubmitStatus({ 
+        type: 'success', 
+        message: '¡Gracias! Tu información ha sido enviada.' 
+      });
+      setFormData({ name: '', email: '', phone: '', interests: '' });
+      
+    } catch (error) {
+      console.error("Error al guardar:", error);
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Error al enviar. Por favor intenta nuevamente.' 
+      });
+    } finally {
       setIsSubmitting(false);
-
-      // Limpieza
-      delete window[callbackName];
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-
-    const script = document.createElement('script');
-    script.src = `${GOOGLE_SCRIPT_URL}?callback=${callbackName}&data=${encodeURIComponent(
-      JSON.stringify(formData)
-    )}`;
-    script.onerror = () => {
-      setSubmitStatus({ type: 'error', message: 'Error de conexión. Intenta recargar la página.' });
-      setIsSubmitting(false);
-      delete window[callbackName];
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-
-    document.body.appendChild(script);
-
-  } catch (error) {
-    setSubmitStatus({ type: 'error', message: error.message });
-    setIsSubmitting(false);
-  }
-};
-
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="contact-form">
