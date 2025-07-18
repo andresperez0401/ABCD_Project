@@ -1,0 +1,154 @@
+/* ================= FOOTER COMPACTO ================= */
+.footer {
+  background: linear-gradient(135deg, #2c3e50, #1a252f);
+  color: white;
+  padding: 30px 20px 20px;
+  font-size: 14px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.footer-brand {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  gap: 15px;
+}
+
+.logo-container {
+  width: 70px;
+  height: 70px;
+  background: #27ae60;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.logo-icon {
+  font-size: 20px;
+}
+
+.footer-brand h3 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.footer-brand p {
+  line-height: 1.5;
+  color: #ecf0f1;
+  max-width: 300px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  flex: 2;
+}
+
+.link-group {
+  min-width: 150px;
+}
+
+.link-group h4 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.link-group h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: #27ae60;
+}
+
+.link-group a {
+  display: flex;
+  align-items: center;
+  color: #bdc3c7;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.link-group a:hover {
+  color: white;
+}
+
+.link-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 20px;
+  border-top: 1px solid #34495e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #95a5a6;
+}
+
+.admin-login {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #27ae60;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.admin-login:hover {
+  color: #2ecc71;
+}
+
+.lock-icon {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .footer-links {
+    width: 100%;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}

@@ -3,6 +3,8 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { db } from '../store/firebase.js';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { FiUser, FiMail, FiPhone, FiGlobe } from 'react-icons/fi';
+import '../styles/ContactForm.css';
 
 const ContactForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -47,16 +49,12 @@ const ContactForm = ({ onSubmit }) => {
     setSubmitStatus(null);
 
     try {
-      // Guardar en Firestore
       const docRef = await addDoc(collection(db, "contactos"), {
         ...formData,
         fecha: serverTimestamp(),
         origen: "formulario-web"
       });
       
-      console.log("Documento guardado con ID:", docRef.id);
-      
-      // Opcional: ejecutar callback adicional
       if(onSubmit) onSubmit(formData);
       
       setSubmitStatus({ 
@@ -66,7 +64,6 @@ const ContactForm = ({ onSubmit }) => {
       setFormData({ name: '', email: '', phone: '', interests: '' });
       
     } catch (error) {
-      console.error("Error al guardar:", error);
       setSubmitStatus({ 
         type: 'error', 
         message: 'Error al enviar. Por favor intenta nuevamente.' 
@@ -77,74 +74,89 @@ const ContactForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="contact-form">
-      <div className="form-group">
-        <label>Nombre completo*</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className={errors.name ? 'error' : ''}
-          placeholder="Ej: María González"
-        />
-        {errors.name && <span className="error-text">{errors.name}</span>}
-      </div>
-
-      <div className="form-group">
-        <label>Correo electrónico*</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className={errors.email ? 'error' : ''}
-          placeholder="Ej: contacto@ejemplo.com"
-        />
-        {errors.email && <span className="error-text">{errors.email}</span>}
-      </div>
-
-      <div className="form-group">
-        <label>Teléfono</label>
-        <PhoneInput
-          international
-          defaultCountry="ES"
-          value={formData.phone}
-          onChange={handlePhoneChange}
-          className="phone-input"
-          placeholder="Ingresa tu número"
-        />
-      </div>
-
-      <div className="form-group">
-        <label>Países/cursos de interés*</label>
-        <textarea
-          name="interests"
-          value={formData.interests}
-          onChange={handleChange}
-          rows="4"
-          className={errors.interests ? 'error' : ''}
-          placeholder="Ej: Cursos de inglés en Canadá y español en Colombia"
-        />
-        {errors.interests && <span className="error-text">{errors.interests}</span>}
-      </div>
-
-      {submitStatus && (
-        <div className={`submit-status ${submitStatus.type}`}>
-          {submitStatus.message}
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="contact-form">
+        <div className="form-group">
+          <div className="input-icon">
+            <FiUser className="icon" />
+          </div>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Nombre completo*"
+            className={errors.name ? 'error' : ''}
+          />
+          {errors.name && <span className="error-text">{errors.name}</span>}
         </div>
-      )}
 
-      <button type="submit" disabled={isSubmitting} className="submit-btn">
-        {isSubmitting ? (
-          <>
-            <span className="spinner"></span> Enviando...
-          </>
-        ) : (
-          'Registrarme ahora'
+        <div className="form-group">
+          <div className="input-icon">
+            <FiMail className="icon" />
+          </div>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Correo electrónico*"
+            className={errors.email ? 'error' : ''}
+          />
+          {errors.email && <span className="error-text">{errors.email}</span>}
+        </div>
+
+        <div className="form-group">
+            <div className="input-icon">
+                <FiPhone className="icon" />
+            </div>
+            <div className="phone-input-container">
+                <PhoneInput
+                international
+                defaultCountry="ES"
+                value={formData.phone}
+                onChange={handlePhoneChange}
+                placeholder="Teléfono"
+                className="phone-input-element"
+                />
+            </div>
+        </div>
+
+        <div className={`form-group ${errors.interests ? 'has-error' : ''}`}>
+            <div className="input-icon">
+                <FiGlobe className="icon" />
+            </div>
+            <div className="interests-container">
+                <textarea
+                name="interests"
+                value={formData.interests}
+                onChange={handleChange}
+                rows="3"
+                placeholder="Países/cursos de interés*"
+                />
+            </div>
+            {errors.interests && <span className="error-text">{errors.interests}</span>}
+        </div>
+
+        {submitStatus && (
+          <div className={`submit-status ${submitStatus.type}`}>
+            {submitStatus.message}
+          </div>
         )}
-      </button>
-    </form>
+
+        <button type="submit" disabled={isSubmitting} className="submit-btn">
+          {isSubmitting ? (
+            <span className="spinner"></span>
+          ) : (
+            'Registrarme ahora'
+          )}
+        </button>
+      </form>
+      
+      <div className="form-footer">
+        {/* <p>Al enviar aceptas nuestra <a href="/politica-privacidad">Política de Privacidad</a></p> */}
+      </div>
+    </div>
   );
 };
 

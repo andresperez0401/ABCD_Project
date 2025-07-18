@@ -215,7 +215,7 @@ export default function GloboCursos() {
             {loading ? (
               <>
                 <div className="spinner"></div>
-                <p>Cargando el mundo de oportunidades...</p>
+                <p>Cargando ...</p>
               </>
             ) : (
               <p className="error-message">{error}</p>

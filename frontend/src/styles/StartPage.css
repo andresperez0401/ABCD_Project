@@ -138,7 +138,7 @@
 
 
 /* ================= FORMULARIO ================= */
-.contact-form {
+/* .contact-form {
   max-width: 600px;
   margin: 0 auto;
   padding: 25px;
@@ -215,7 +215,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .contact-form {
     padding: 18px;
   }
@@ -224,7 +224,7 @@
   .form-group textarea {
     padding: 12px;
   }
-}
+} */ 
 
 
 
@@ -357,3 +357,27 @@
     max-height: 500px;
   }
 }
+
+
+/* ================= SECCIÓN CONTACTO EN START PAGE ================= */
+.contact-section {
+  width: 100%;
+  padding: 3rem 1rem;
+  background: #f9fbfd;
+  text-align: center;
+}
+
+.contact-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  color: #2c3e50;
+}
+
+.contact-subtitle {
+  font-size: 1rem;
+  color: #7f8c8d;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+

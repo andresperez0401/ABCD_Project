@@ -5,8 +5,8 @@ import CourseCards from "./CourseCards";
 import "../styles/StartPage.css";
 import StatsBar from "./StatsBar";              
 import VideoTestimonials from "./VideoTestimonials";
-import GoogleFormEmbed from "./GoogleFormEmbed";
 import ContactForm from "./ContactForm";
+import Footer from "./Footer"; // Nuevo footer
 
 const StartPage = () => {
 
@@ -51,21 +51,12 @@ const StartPage = () => {
     {/* Testimonios en video */}
     <VideoTestimonials />       
 
-    {/* Sección de formulario de Google */}
-    {/* <section className="contact-section">
-      <h2>Contáctanos</h2>
-      <GoogleFormEmbed />
-    </section> */}
-
     {/* Sección de formulario de contacto */}
     <section className="contact-section">
-        <h2>Contáctanos</h2>
+        <h2>¿Listo para comenzar tu aventura?</h2>
+        <p className="contact-subtitle">Déjanos tus datos y te contactaremos con las mejores opciones</p>
         <ContactForm onSubmit={handleFormSubmit} />
     </section>
-
-
-    {/* Más secciones abajo… */}
-    <section className="more-info">{/* … */}</section>
   </div>
 );
 }

@@ -10,6 +10,8 @@ import Navbar from './components/Navbar.jsx';
 import StartPage from './components/StartPage.jsx';
 import WhatsAppButton from "./components/WhatsappButton.jsx";
 import ContactPage from './components/ContactPage.jsx';
+import Footer from './components/Footer.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 
 
 const AppContent = () => {
@@ -30,7 +32,7 @@ const AppContent = () => {
         {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
       <WhatsAppButton />
-      {/* {!hideLayout && <Footer />} */}
+      <Footer />
 
       {/* Para alertas y notificaciones de la app */}
       <ToastContainer

@@ -1,7 +1,8 @@
 import React from 'react';
 import ContactForm from './ContactForm';
 import Navbar from './Navbar';
-import '../styles/StartPage.css';
+import Footer from './Footer';
+import '../styles/ContactPage.css'; // Nuevo archivo CSS
 
 const ContactPage = () => {
   const handleSubmit = (data) => {
@@ -11,8 +12,11 @@ const ContactPage = () => {
   return (
     <div className="start-page">
       <Navbar />
-      <section className="contact-section" style={{ minHeight: '80vh' }}>
-        <h1 style={{ textAlign: 'center' }}>Contáctanos</h1>
+      <section className="contact-page-section">
+        <div className="contact-page-header">
+          <h1>Contáctanos</h1>
+          <p>Completa el formulario y nuestro equipo te responderá en breve</p>
+        </div>
         <ContactForm onSubmit={handleSubmit} />
       </section>
     </div>
