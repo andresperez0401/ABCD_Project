@@ -7,6 +7,7 @@ import StatsBar from "./StatsBar";
 import VideoTestimonials from "./VideoTestimonials";
 
 const StartPage = () => (
+
   <div className="start-page">
     <Navbar />
 

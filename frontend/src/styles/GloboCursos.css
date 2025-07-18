@@ -1,4 +1,4 @@
-/* Contenedor principal para mantener relación de aspecto */
+/* Contenedor principal */
 .globe-container {
   position: relative;
   display: flex;
@@ -6,58 +6,105 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: #f0f8ff;
   border-radius: 50%;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   overflow: hidden;
 }
 
-/* Lienzo dentro del contenedor */
-.globe-canvas {
+/* Placeholder para carga */
+.globe-placeholder {
   position: absolute;
   top: 0;
   left: 0;
-  min-width: 300px;
-  min-height: 300px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(240, 248, 255, 0.9);
+  z-index: 10;
+  border-radius: 50%;
 }
 
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(26, 115, 232, 0.2);
+  border-top: 5px solid #1a73e8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
 
-/* Modal header y cuerpo */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.globe-placeholder p {
+  color: #1a73e8;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-align: center;
+  max-width: 80%;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+/* Modal */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #4ac3d3;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.2rem;
 }
 .modal-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  color: #1a73e8;
 }
 .modal-close {
   background: transparent;
   border: none;
-  font-size: 1.5rem;
-  color: #000000;
+  font-size: 1.8rem;
+  color: #777;
   cursor: pointer;
   padding: 0.5rem;
   line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover {
+  color: #333;
 }
 
 .modal-body {
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #444;
 }
 
 /* Para dispositivos móviles */
 @media (max-width: 768px) {
-  .globe-container {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  .modal-header h2 {
+    font-size: 1.4rem;
   }
-}
-
-/* Pinta de azul el fondo del canvas (océano) */
-.globe-canvas canvas {
-  background-color: #87cefa !important;
+  
+  .modal-body {
+    font-size: 1rem;
+  }
+  
+  .globe-placeholder p,
+  .error-message {
+    font-size: 1rem;
+  }
 }

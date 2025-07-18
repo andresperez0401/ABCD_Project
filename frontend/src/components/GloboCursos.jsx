@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { Context } from "../store/appContext.jsx";
 import Globe from "globe.gl";
 import * as THREE from 'three';
@@ -8,37 +8,69 @@ import "../styles/GloboCursos.css";
 Modal.setAppElement("#root");
 
 export default function GloboCursos() {
+  // Referencias
   const globeEl = useRef();
   const containerRef = useRef();
+  const globeInstanceRef = useRef(null);
+  
+  // Estados
   const [world, setWorld] = useState([]);
   const [selected, setSelected] = useState(null);
   const [globeSize, setGlobeSize] = useState(0);
-
-  // Cargamos los paises desde el contexto
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Contexto de la aplicación
   const { store } = useContext(Context);
-
-  // Países
   const SELECTED_COUNTRIES = store.SELECTED_COUNTRIES;
-
-  // Info de los cursos
   const cursos = store.infoPaises;
 
-  // 1) Cargar GeoJSON
+  // Ref para mantener la función actualizada de selección
+  const selectionRef = useRef(selected);
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-      .then(r => r.json())
-      .then(data => setWorld(data.features));
+    selectionRef.current = selected;
+  }, [selected]);
+
+  // ========================================================
+  // 1. CARGAR DATOS GEOGRÁFICOS
+  // ========================================================
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+    
+    setLoading(true);
+    setError(null);
+    
+    fetch("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson", { signal })
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        setWorld(data.features);
+        setError(null);
+      })
+      .catch(err => {
+        if (err.name !== 'AbortError') {
+          console.error("Error cargando el GeoJSON:", err);
+          setError("Error al cargar el mapa. Por favor, inténtalo de nuevo más tarde.");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    
+    return () => controller.abort();
   }, []);
 
-  // Actualizar dimensiones al cambiar tamaño
+  // ========================================================
+  // 2. ACTUALIZAR DIMENSIONES DEL GLOBO
+  // ========================================================
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
         const container = containerRef.current;
-        const size = Math.min(
-          container.clientWidth, 
-          container.clientHeight
-        );
+        const size = Math.min(container.clientWidth, container.clientHeight);
         setGlobeSize(size);
       }
     };
@@ -51,50 +83,54 @@ export default function GloboCursos() {
     }
     
     window.addEventListener("resize", updateDimensions);
+    
     return () => {
       window.removeEventListener("resize", updateDimensions);
       resizeObserver.disconnect();
     };
   }, []);
 
-  // 2) Inicializar y actualizar Globe - SOLUCIÓN PRINCIPAL AQUÍ
-  useEffect(() => {
+  // ========================================================
+  // 3. INICIALIZAR EL GLOBO (SOLO UNA VEZ)
+  // ========================================================
+  const initGlobe = useCallback(() => {
     if (!globeEl.current || !world.length || !globeSize) return;
+    
+    // Limpiar instancia anterior si existe
+    if (globeInstanceRef.current) {
+      globeInstanceRef.current._destructor();
+      globeEl.current.innerHTML = "";
+    }
 
-    // SOLUCIÓN SIMPLIFICADA - MATERIAL BÁSICO SIN LUCES
-    // =================================================
-    // 1. Material básico para el océano
+    // Material para el océano
     const oceanMaterial = new THREE.MeshStandardMaterial({
-      color: "#247ab3",       // Azul corporativo
-      roughness: 0.7,         // Superficie ligeramente rugosa
-      metalness: 0.1,         // Reflejo metálico mínimo
-      emissive: "#0a4da8",    // Color base para sombras
-      emissiveIntensity: 0.3  // Intensidad del color base
+      color: "#1a73e8",
+      roughness: 0.7,
+      metalness: 0.1,
+      emissive: "#0a4da8",
+      emissiveIntensity: 0.3
     });
 
-    // 2. Configuración del globo sin texturas complejas
+    // Crear nueva instancia del globo
     const globe = Globe()(globeEl.current)
       .showGlobe(true)
-      .globeImageUrl(null)    // Sin textura
+      .globeImageUrl(null)
       .backgroundImageUrl(null)
       .backgroundColor("rgba(0, 0, 0, 0)") 
-      .globeMaterial(oceanMaterial) // Aplicamos el material básico
+      .globeMaterial(oceanMaterial)
       .showGraticules(false)
       .polygonsData(world)
       .polygonCapColor(({ properties: d }) => {
-        // Lógica mejorada de colores
-        if (selected && selected.country === d.name) {
-          return "#ffffff"; // País seleccionado - blanco
-        }
-        return SELECTED_COUNTRIES.includes(d.name) 
-          ? "#e0f7fa"  // Países con cursos - azul muy claro
-          : "#78909c"; // Países normales - gris azulado suave
+        // Usamos la ref para obtener el valor actual de selected
+        const currentSelected = selectionRef.current;
+        if (currentSelected && currentSelected.country === d.name) return "#ffffff";
+        return SELECTED_COUNTRIES.includes(d.name) ? "#e0f7fa" : "#78909c";
       })
-      .polygonSideColor(() => "rgba(0,0,0,0)") // Lados transparentes
-      .polygonStrokeColor(() => "#37474f")     // Borde oscuro suave
+      .polygonSideColor(() => "rgba(0,0,0,0)")
+      .polygonStrokeColor(() => "#37474f")
       .polygonAltitude(({ properties: d }) => {
-        // Altura basada en selección
-        if (selected && selected.country === d.name) return 0.05;
+        const currentSelected = selectionRef.current;
+        if (currentSelected && currentSelected.country === d.name) return 0.05;
         return SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005;
       })
       .onPolygonClick(p => {
@@ -106,38 +142,88 @@ export default function GloboCursos() {
       .height(globeSize)
       .pointOfView({ lat: 0, lng: 0, altitude: 1.2 }, 0);
 
-    // Configuraciones de renderizado
+    // Configuración del renderizado
     globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio, 2));
     globe.renderer().antialias = true;
     
-    // Bloquear zoom
+    // Configuración de controles
     globe.controls().enableZoom = false;
-    
-    // Rotación automática suave
     globe.controls().autoRotate = true;
     globe.controls().autoRotateSpeed = 0.5;
 
-    // Ajustar tamaño al cambiar
+    // Guardar referencia a la instancia
+    globeInstanceRef.current = globe;
+
+    // Manejar redimensionamiento
     const handleResize = () => {
       if (containerRef.current) {
-        const size = Math.min(
-          containerRef.current.clientWidth, 
-          containerRef.current.clientHeight
-        );
+        const size = Math.min(containerRef.current.clientWidth, containerRef.current.clientHeight);
         globe.width(size).height(size);
       }
     };
 
     window.addEventListener("resize", handleResize);
+    
+    // Limpieza al desmontar
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (globeEl.current) globeEl.current.innerHTML = "";
+      if (globeInstanceRef.current) {
+        globeInstanceRef.current._destructor();
+      }
     };
-  }, [world, globeSize, SELECTED_COUNTRIES, cursos, selected]); // Añadimos selected
+  }, [world, globeSize, SELECTED_COUNTRIES, cursos]);
 
+  // Inicializar el globo cuando los datos estén listos
+  useEffect(() => {
+    if (world.length && globeSize && !loading && !error) {
+      initGlobe();
+    }
+  }, [world, globeSize, loading, error, initGlobe]);
+
+  // ========================================================
+  // 4. ACTUALIZAR EL GLOBO CUANDO CAMBIA LA SELECCIÓN
+  // ========================================================
+  useEffect(() => {
+    if (!globeInstanceRef.current) return;
+    
+    // Actualizamos las funciones de estilo
+    globeInstanceRef.current
+      .polygonCapColor(({ properties: d }) => {
+        if (selected && selected.country === d.name) return "#ffffff";
+        return SELECTED_COUNTRIES.includes(d.name) ? "#e0f7fa" : "#78909c";
+      })
+      .polygonAltitude(({ properties: d }) => {
+        if (selected && selected.country === d.name) return 0.05;
+        return SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005;
+      });
+
+    // Forzar actualización de los polígonos
+    const currentData = globeInstanceRef.current.polygonsData();
+    globeInstanceRef.current.polygonsData([...currentData]);
+    
+  }, [selected, SELECTED_COUNTRIES]);
+
+  // ========================================================
+  // RENDERIZADO
+  // ========================================================
   return (
     <>
       <div className="globe-container" ref={containerRef}>
+        {/* Spinner de carga o mensaje de error */}
+        {(loading || error) && (
+          <div className="globe-placeholder">
+            {loading ? (
+              <>
+                <div className="spinner"></div>
+                <p>Cargando el mundo de oportunidades...</p>
+              </>
+            ) : (
+              <p className="error-message">{error}</p>
+            )}
+          </div>
+        )}
+        
+        {/* Canvas para el globo - solo visible cuando no hay carga ni error */}
         <div 
           className="globe-canvas" 
           ref={globeEl} 
@@ -146,11 +232,13 @@ export default function GloboCursos() {
             height: `${globeSize}px`,
             borderRadius: "50%",
             overflow: "hidden",
-            background: "#e3f2fd" // Fondo azul claro uniforme
+            background: "#e3f2fd",
+            display: (loading || error) ? "none" : "block"
           }} 
         />
       </div>
 
+      {/* Modal para detalles del curso */}
       {selected && (
         <Modal
           isOpen
