@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { Context } from "../store/appContext.jsx";
 import Globe from "globe.gl";
+import * as THREE from 'three';
 import Modal from "react-modal";
 import "../styles/GloboCursos.css";
 
@@ -56,31 +57,46 @@ export default function GloboCursos() {
     };
   }, []);
 
-  // 2) Inicializar y actualizar Globe
+  // 2) Inicializar y actualizar Globe - SOLUCIÓN PRINCIPAL AQUÍ
   useEffect(() => {
     if (!globeEl.current || !world.length || !globeSize) return;
 
-    // textura negra 1×1
-    // const BLACK_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEUAAAD///+l2Z/dAAAACklEQVQI12NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
-    const TRANSPARENT_PIXEL = 
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB" +
-  "CAQAAAC1HAwCAAAAC0lEQVQImWNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=";
+    // SOLUCIÓN SIMPLIFICADA - MATERIAL BÁSICO SIN LUCES
+    // =================================================
+    // 1. Material básico para el océano
+    const oceanMaterial = new THREE.MeshStandardMaterial({
+      color: "#247ab3",       // Azul corporativo
+      roughness: 0.7,         // Superficie ligeramente rugosa
+      metalness: 0.1,         // Reflejo metálico mínimo
+      emissive: "#0a4da8",    // Color base para sombras
+      emissiveIntensity: 0.3  // Intensidad del color base
+    });
 
+    // 2. Configuración del globo sin texturas complejas
     const globe = Globe()(globeEl.current)
       .showGlobe(true)
-      .globeImageUrl(TRANSPARENT_PIXEL)    // ← Usa el transparente, no el negro
-      .backgroundImageUrl(null)            // ← Quita cualquier skybox oscuro
-      .backgroundColor("#87cefa")
+      .globeImageUrl(null)    // Sin textura
+      .backgroundImageUrl(null)
+      .backgroundColor("rgba(0, 0, 0, 0)") 
+      .globeMaterial(oceanMaterial) // Aplicamos el material básico
       .showGraticules(false)
       .polygonsData(world)
-      .polygonCapColor(({ properties: d }) =>
-        SELECTED_COUNTRIES.includes(d.name) ? "#ffffff" : "#2f4f4f"
-      )
-      .polygonSideColor(() => "rgba(0,0,0,0)")
-      .polygonStrokeColor(() => "#222222")
-      .polygonAltitude(({ properties: d }) =>
-        SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005
-      )
+      .polygonCapColor(({ properties: d }) => {
+        // Lógica mejorada de colores
+        if (selected && selected.country === d.name) {
+          return "#ffffff"; // País seleccionado - blanco
+        }
+        return SELECTED_COUNTRIES.includes(d.name) 
+          ? "#e0f7fa"  // Países con cursos - azul muy claro
+          : "#78909c"; // Países normales - gris azulado suave
+      })
+      .polygonSideColor(() => "rgba(0,0,0,0)") // Lados transparentes
+      .polygonStrokeColor(() => "#37474f")     // Borde oscuro suave
+      .polygonAltitude(({ properties: d }) => {
+        // Altura basada en selección
+        if (selected && selected.country === d.name) return 0.05;
+        return SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005;
+      })
       .onPolygonClick(p => {
         const curso = cursos.find(c => c.country === p.properties.name);
         setSelected(curso);
@@ -90,7 +106,7 @@ export default function GloboCursos() {
       .height(globeSize)
       .pointOfView({ lat: 0, lng: 0, altitude: 1.2 }, 0);
 
-    // Retina & antialias
+    // Configuraciones de renderizado
     globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio, 2));
     globe.renderer().antialias = true;
     
@@ -117,7 +133,7 @@ export default function GloboCursos() {
       window.removeEventListener("resize", handleResize);
       if (globeEl.current) globeEl.current.innerHTML = "";
     };
-  }, [world, globeSize, SELECTED_COUNTRIES, cursos]);
+  }, [world, globeSize, SELECTED_COUNTRIES, cursos, selected]); // Añadimos selected
 
   return (
     <>
@@ -129,7 +145,8 @@ export default function GloboCursos() {
             width: `${globeSize}px`, 
             height: `${globeSize}px`,
             borderRadius: "50%",
-            overflow: "hidden"
+            overflow: "hidden",
+            background: "#e3f2fd" // Fondo azul claro uniforme
           }} 
         />
       </div>
