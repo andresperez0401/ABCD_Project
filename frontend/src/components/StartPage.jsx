@@ -5,9 +5,20 @@ import CourseCards from "./CourseCards";
 import "../styles/StartPage.css";
 import StatsBar from "./StatsBar";              
 import VideoTestimonials from "./VideoTestimonials";
+import GoogleFormEmbed from "./GoogleFormEmbed";
+import ContactForm from "./ContactForm";
 
-const StartPage = () => (
+const StartPage = () => {
 
+  const handleFormSubmit = (data) => {
+    // 1. Guardar en el estado de Flux
+    // dispatch(saveContactData(data));
+    
+    // 2. Enviar a tu backend
+    console.log("Datos para backend:", data);
+  };
+
+  return (
   <div className="start-page">
     <Navbar />
 
@@ -40,9 +51,23 @@ const StartPage = () => (
     {/* Testimonios en video */}
     <VideoTestimonials />       
 
+    {/* Sección de formulario de Google */}
+    {/* <section className="contact-section">
+      <h2>Contáctanos</h2>
+      <GoogleFormEmbed />
+    </section> */}
+
+    {/* Sección de formulario de contacto */}
+    <section className="contact-section">
+        <h2>Contáctanos</h2>
+        <ContactForm onSubmit={handleFormSubmit} />
+    </section>
+
+
     {/* Más secciones abajo… */}
     <section className="more-info">{/* … */}</section>
   </div>
 );
+}
 
 export default StartPage;

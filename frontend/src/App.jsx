@@ -9,6 +9,8 @@ import injectContext from "./store/appContext.jsx";
 import Navbar from './components/Navbar.jsx';
 import StartPage from './components/StartPage.jsx';
 import WhatsAppButton from "./components/WhatsappButton.jsx";
+import ContactPage from './components/ContactPage.jsx';
+
 
 const AppContent = () => {
   const location = useLocation();
@@ -24,10 +26,11 @@ const AppContent = () => {
     <>
       <Routes>
         <Route path="/" element={<StartPage />} />
+        <Route path="/contacto" element={<ContactPage />} />
         {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
       <WhatsAppButton />
-      {!hideLayout && <Footer />}
+      {/* {!hideLayout && <Footer />} */}
 
       {/* Para alertas y notificaciones de la app */}
       <ToastContainer

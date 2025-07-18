@@ -123,6 +123,111 @@
   background: #fff;
 }
 
+
+/* Contact Section */
+.contact-section {
+  width: 100%;
+  padding: 2rem 1rem;
+  background: #f9f9f9;
+  text-align: center;
+}
+.contact-section h2 {
+  margin-bottom: 1rem;
+}
+
+
+
+/* ================= FORMULARIO ================= */
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #27ae60;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+.phone-input {
+  padding: 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #ddd !important;
+}
+
+.submit-btn {
+  background: linear-gradient(to right, #27ae60, #2ecc71);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+.error {
+  border-color: #e74c3c !important;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-form {
+    padding: 18px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 12px;
+  }
+}
+
+
+
 /* ======================================================= */
 /* 6. MEDIA QUERIES - RESPONSIVE DESIGN
 /* ======================================================= */
