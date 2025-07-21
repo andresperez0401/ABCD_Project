@@ -8,7 +8,6 @@ usuario_bp = Blueprint('usuario', __name__)
 # 1) Ruta para obtener todos los usuarios 
 
 @usuario_bp.route('', methods=['GET'])
-@jwt_required()
 def get_usuarios():
     usuarios = Usuario.query.all()
     return jsonify([usuario.serialize() for usuario in usuarios]), 200
@@ -132,6 +131,6 @@ def delete_usuario(id):
     db.session.delete(usuario)
     db.session.commit()
 
-    return jsonify({"message": "Usuario eliminado"}), 200
+    return jsonify({"msg": "Usuario eliminado"}), 200
 
 # Finalizar ruta para eliminar un usuario por ID

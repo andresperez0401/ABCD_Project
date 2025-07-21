@@ -1,32 +1,27 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Integer, ForeignKey, Float
+from sqlalchemy import String, Integer, ForeignKey, Float, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date, time
 import uuid
 
-# Inicialización de la base de datos
 db = SQLAlchemy()
 
-# ---------------------- Asociación Curso-Servicio ----------------------
-class CursoServicio(db.Model):
-    __tablename__ = 'curso_servicio'
-
-    curso_id: Mapped[int]    = mapped_column(Integer, ForeignKey('curso.idCurso'), primary_key=True)
-    servicio_id: Mapped[int] = mapped_column(Integer, ForeignKey('servicio.idServicio'), primary_key=True)
-
-    # Relaciones a Curso y Servicio
-    curso: Mapped['Curso']       = relationship('Curso', back_populates='curso_servicios')
-    servicio: Mapped['Servicio'] = relationship('Servicio', back_populates='curso_servicios')
+# Tabla de asociación para la relación Curso-Servicio
+curso_servicio = Table(
+    'curso_servicio',
+    db.metadata,
+    Column('curso_id', Integer, ForeignKey('curso.idCurso'), primary_key=True),
+    Column('servicio_id', Integer, ForeignKey('servicio.idServicio'), primary_key=True)
+)
 
 # ---------------------------- Usuario ----------------------------
 class Usuario(db.Model):
     __tablename__ = 'usuario'
-
-    idUsuario: Mapped[int]      = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]         = mapped_column(String(120), nullable=False)
-    email: Mapped[str]          = mapped_column(String(120), unique=True, nullable=False)
-    clave: Mapped[str]          = mapped_column(String(120), nullable=False)
-    telefono: Mapped[str]       = mapped_column(String(20), nullable=False)
+    idUsuario: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    clave: Mapped[str] = mapped_column(String(120), nullable=False)
+    telefono: Mapped[str] = mapped_column(String(20), nullable=False)
 
     def serialize(self):
         return {
@@ -39,12 +34,11 @@ class Usuario(db.Model):
 # ---------------------------- Cliente -----------------------------
 class Cliente(db.Model):
     __tablename__ = 'cliente'
-
     idCliente: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]    = mapped_column(String(120), nullable=False)
-    email: Mapped[str]     = mapped_column(String(120), unique=True, nullable=False)
-    telefono: Mapped[str]  = mapped_column(String(20), nullable=False)
-    interes: Mapped[str]   = mapped_column(String(255), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    telefono: Mapped[str] = mapped_column(String(20), nullable=False)
+    interes: Mapped[str] = mapped_column(String(255), nullable=False)
 
     def serialize(self):
         return {
@@ -58,15 +52,14 @@ class Cliente(db.Model):
 # ---------------------------- Destino -----------------------------
 class Destino(db.Model):
     __tablename__ = 'destino'
-
-    idDestino: Mapped[int]    = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]       = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str]  = mapped_column(String(255), nullable=False)
-    ubicacion: Mapped[str]    = mapped_column(String(255), nullable=True)
-    imageUrl: Mapped[str]     = mapped_column(String(255), nullable=True)
+    idDestino: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
+    ubicacion: Mapped[str] = mapped_column(String(255), nullable=True)
+    imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
 
     ciudades: Mapped[list['Ciudad']] = relationship('Ciudad', back_populates='destino', cascade='all, delete-orphan')
-    cursos: Mapped[list['Curso']]    = relationship('Curso', back_populates='destino')
+    cursos: Mapped[list['Curso']] = relationship('Curso', back_populates='destino')
 
     def serialize(self):
         return {
@@ -80,12 +73,11 @@ class Destino(db.Model):
 # ---------------------------- Ciudad ------------------------------
 class Ciudad(db.Model):
     __tablename__ = 'ciudad'
-
-    idCiudad: Mapped[int]      = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]        = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str]   = mapped_column(String(255), nullable=False)
-    imageUrl: Mapped[str]      = mapped_column(String(255), nullable=True)
-    destino_id: Mapped[int]    = mapped_column(Integer, ForeignKey('destino.idDestino'), nullable=False)
+    idCiudad: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
+    imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
+    destino_id: Mapped[int] = mapped_column(Integer, ForeignKey('destino.idDestino'), nullable=False)
 
     destino: Mapped['Destino'] = relationship('Destino', back_populates='ciudades')
 
@@ -101,11 +93,10 @@ class Ciudad(db.Model):
 # ---------------------------- Idioma ------------------------------
 class Idioma(db.Model):
     __tablename__ = 'idioma'
-
-    idIdioma: Mapped[int]      = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]        = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str]   = mapped_column(String(255), nullable=False)
-    imageUrl: Mapped[str]      = mapped_column(String(255), nullable=True)
+    idIdioma: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
+    imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
 
     cursos: Mapped[list['Curso']] = relationship('Curso', back_populates='idioma')
 
@@ -120,27 +111,27 @@ class Idioma(db.Model):
 # ---------------------------- Curso ------------------------------
 class Curso(db.Model):
     __tablename__ = 'curso'
+    idCurso: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
+    duracion: Mapped[str] = mapped_column(String(50), nullable=False)
+    nivel: Mapped[str] = mapped_column(String(50), nullable=False)
+    imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
+    tipoCurso: Mapped[str] = mapped_column(String(50), nullable=False)
+    edades: Mapped[str] = mapped_column(String(50), nullable=False)
 
-    idCurso: Mapped[int]       = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]        = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str]   = mapped_column(String(255), nullable=False)
-    duracion: Mapped[str]      = mapped_column(String(50), nullable=False)
-    nivel: Mapped[str]         = mapped_column(String(50), nullable=False)
-    imageUrl: Mapped[str]      = mapped_column(String(255), nullable=True)
-    tipoCurso: Mapped[str]     = mapped_column(String(50), nullable=False)
-    edades: Mapped[str]        = mapped_column(String(50), nullable=False)
+    # Relaciones simplificadas
+    servicios: Mapped[list['Servicio']] = relationship(
+        'Servicio', 
+        secondary=curso_servicio, 
+        back_populates='cursos'
+    )
 
-    # Asociación con CursoServicio
-    curso_servicios: Mapped[list[CursoServicio]] = relationship('CursoServicio', back_populates='curso', cascade='all, delete-orphan')
-    servicios: Mapped[list['Servicio']]          = relationship('Servicio', secondary='curso_servicio', back_populates='cursos')
-
-    # Relación many-to-one con Destino
-    destino_id: Mapped[int]    = mapped_column(Integer, ForeignKey('destino.idDestino'), nullable=False)
+    destino_id: Mapped[int] = mapped_column(Integer, ForeignKey('destino.idDestino'), nullable=False)
     destino: Mapped['Destino'] = relationship('Destino', back_populates='cursos')
 
-    # Relación many-to-one con Idioma
-    idioma_id: Mapped[int]     = mapped_column(Integer, ForeignKey('idioma.idIdioma'), nullable=False)
-    idioma: Mapped['Idioma']   = relationship('Idioma', back_populates='cursos')
+    idioma_id: Mapped[int] = mapped_column(Integer, ForeignKey('idioma.idIdioma'), nullable=False)
+    idioma: Mapped['Idioma'] = relationship('Idioma', back_populates='cursos')
 
     def serialize(self):
         return {
@@ -160,15 +151,17 @@ class Curso(db.Model):
 # ---------------------------- Servicio ---------------------------
 class Servicio(db.Model):
     __tablename__ = 'servicio'
+    idServicio: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
+    precio: Mapped[str] = mapped_column(String(50), nullable=True)
+    imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    idServicio: Mapped[int]    = mapped_column(Integer, primary_key=True, autoincrement=True)
-    nombre: Mapped[str]        = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str]   = mapped_column(String(255), nullable=False)
-    precio: Mapped[float]      = mapped_column(Float, nullable=True)
-    imageUrl: Mapped[str]      = mapped_column(String(255), nullable=True)
-
-    curso_servicios: Mapped[list[CursoServicio]] = relationship('CursoServicio', back_populates='servicio', cascade='all, delete-orphan')
-    cursos: Mapped[list['Curso']]                = relationship('Curso', secondary='curso_servicio', back_populates='servicios')
+    cursos: Mapped[list['Curso']] = relationship(
+        'Curso', 
+        secondary=curso_servicio, 
+        back_populates='servicios'
+    )
 
     def serialize(self):
         return {
