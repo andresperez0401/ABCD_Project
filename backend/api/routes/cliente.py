@@ -53,7 +53,8 @@ def create_cliente():
         nombre=data.get('nombre'),
         email=data.get('email'),
         telefono=data.get('telefono'),
-        interes=data.get('interes', '')
+        interes=data.get('interes', ''),
+        estado = 'Registrado'  # Estado por defecto
     )
 
     # Agregar a la base de datos y confirmar

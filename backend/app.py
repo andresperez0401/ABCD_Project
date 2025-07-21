@@ -41,14 +41,14 @@ Migrate(app, db, compare_type=True)
 jwt = JWTManager(app)
 
 # Registrar Blueprints
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(usuario_bp, url_prefix='/api/usuarios')
-app.register_blueprint(cliente_bp, url_prefix='/api/clientes')
-app.register_blueprint(destino_bp, url_prefix='/api/destinos')
-app.register_blueprint(ciudad_bp, url_prefix='/api/ciudades')
-app.register_blueprint(idioma_bp, url_prefix='/api/idiomas')
-app.register_blueprint(curso_bp, url_prefix='/api/cursos')
-app.register_blueprint(servicio_bp, url_prefix='/api/servicios')
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(usuario_bp, url_prefix='/usuario')
+app.register_blueprint(cliente_bp, url_prefix='/cliente')
+app.register_blueprint(destino_bp, url_prefix='/destino')
+app.register_blueprint(ciudad_bp, url_prefix='/ciudad')
+app.register_blueprint(idioma_bp, url_prefix='/idioma')
+app.register_blueprint(curso_bp, url_prefix='/curso')
+app.register_blueprint(servicio_bp, url_prefix='/servicio')
 
 # Ruta base
 @app.route('/')

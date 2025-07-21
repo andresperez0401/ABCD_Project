@@ -39,7 +39,7 @@ class Cliente(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     telefono: Mapped[str] = mapped_column(String(20), nullable=False)
     interes: Mapped[str] = mapped_column(String(255), nullable=False)
-    estado: Mapped[str] = mapped_column(String(50), default='registrado')
+    estado: Mapped[str] = mapped_column(String(50), nullable=True)
 
     def serialize(self):
         return {
@@ -47,7 +47,8 @@ class Cliente(db.Model):
             'nombre': self.nombre,
             'email': self.email,
             'telefono': self.telefono,
-            'interes': self.interes
+            'interes': self.interes, 
+            'estado': self.estado
         }
 
 # ---------------------------- Destino -----------------------------
@@ -176,6 +177,7 @@ class Servicio(db.Model):
 
 # ---------------------------- Testimonio ---------------------------
 class Testimonio(db.Model):
+    
     __tablename__ = 'testimonio'
     idTestimonio: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
