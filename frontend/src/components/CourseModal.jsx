@@ -37,11 +37,11 @@ export default function CourseModal({ isOpen, onRequestClose, course }) {
       <div className="cm-body">
         <p className="cm-desc">{course.description}</p>
         <ul className="cm-info">
-          <li><FaGlobe /> <strong>Destinos:</strong> {course.destinos}</li>
+          <li><FaGlobe /> <strong>Destino:</strong> {course.destino.nombre}</li>
           <li><FaUsers /> <strong>Edades:</strong> {course.edades}</li>
-          <li><FaClock /> <strong>Duración:</strong> {course.duration}</li>
-          <li><FaHotel /> <strong>Servicios:</strong> {course.services}</li>
-          <li><FaLanguage /> <strong>Idiomas:</strong> {course.idiomas}</li>
+          <li><FaClock /> <strong>Duración:</strong> {course.duracion}</li>
+          {/* <li><FaHotel /> <strong>Servicios:</strong> {course.servici}</li> */}
+          <li><FaLanguage /> <strong>Idioma:</strong> {course.idioma.nombre}</li>
         </ul>
       </div>
       <div className="cm-footer">

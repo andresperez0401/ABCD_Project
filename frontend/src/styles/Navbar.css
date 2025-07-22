@@ -1,31 +1,237 @@
-.navbar {
+/* ================= Variables ================= */
+
+
+
+:root {
+  --nav-height: 80px;
+  --nav-height-mobile: 70px;
+  --nav-bg: rgba(255, 255, 255, 0.98);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.98);
+  --nav-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --nav-border: rgba(0, 0, 0, 0.05);
+  --text-color: #090a0a;
+  --text-hover: #27ae60;
+  --text-active: #27ae60;
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --easing: cubic-bezier(0.23, 1, 0.32, 1);
+  --font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ================= Base Styles ================= */
+.nav {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  min-height: 70px;   /* permite crecer cuando el menú se expanda */
-  padding: 0 1rem;    /* separaciones horizontales */
+  top: 0;
+  left: 0;
+  right: 0;
+  color: black;
+  height: var(--nav-height);
+  background: var(--nav-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.nav-scrolled {
+  box-shadow: var(--nav-shadow);
+  background: var(--nav-bg-scrolled);
+  height: var(--nav-height);
+  backdrop-filter: blur(6px);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ================= Brand/Logo ================= */
+.nav-brand {
   display: flex;
   align-items: center;
-  background: linear-gradient(to right, #f0f0f0, #f0f0f0);
-  border-bottom: 1px solid #9b9b9b;
-  z-index: 999;
+  z-index: 1001;
 }
 
-.navbar .navbar-collapse {
-  margin-top: 0.5rem;
-}
-.navbar-title {
-  font-family: 'Pacifico', cursive;
-  font-weight: 400;
-  font-size: 2rem;
-  color: #000;
+.nav-logo {
+  height: 40px;
+  transition: transform 0.3s var(--easing);
 }
 
-.shadow-sm {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.nav-logo-link:hover .nav-logo {
+  transform: scale(1.05);
 }
 
-/* Ajuste para que el contenido no se meta debajo
-body {
-  padding-top: 70px; /* empuja todo el contenido debajo del navbar */
- /*}
+/* ================= Menu Items ================= */
+.nav-menu {
+  display: flex;
+  height: 100%;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 0 0.5rem;
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: black !important;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-family: var(--font-family);
+  letter-spacing: 0.5px;
+}
+
+.nav-link:hover {
+  color: var(--text-hover);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--text-hover);
+  transition: var(--transition);
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+.nav-link.active {
+   color: #27ae60 !important;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  width: 70%;
+  background: var(--text-active);
+}
+
+/* ================= Mobile Toggle ================= */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+  outline: none;
+}
+
+.nav-toggle-line {
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: var(--text-color);
+  margin: 6px 0;
+  transition: var(--transition);
+  border-radius: 2px;
+}
+
+/* ================= Mobile Menu ================= */
+@media (max-width: 992px) {
+  .nav {
+    height: var(--nav-height-mobile);
+  }
+  
+  .nav-scrolled {
+    height: var(--nav-height-mobile);
+  }
+  
+  .nav-container {
+    padding: 0 1.5rem;
+  }
+  
+  .nav-toggle {
+    display: block;
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: var(--nav-height-mobile);
+    left: 0;
+    right: 0;
+    background: var(--nav-bg-scrolled);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    height: calc(100vh - var(--nav-height-mobile));
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s var(--easing);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  
+  .nav-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .nav-list {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    padding: 2rem 0;
+  }
+  
+  .nav-item {
+    margin: 0.8rem 0;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .nav-link {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 30%;
+  }
+  
+  /* Hamburger animation */
+  .nav-toggle.open .nav-toggle-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .nav-toggle.open .nav-toggle-line:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .nav-toggle.open .nav-toggle-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+/* ================= Typography ================= */

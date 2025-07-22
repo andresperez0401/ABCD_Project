@@ -12,6 +12,8 @@ import WhatsAppButton from "./components/WhatsappButton.jsx";
 import ContactPage from './components/ContactPage.jsx';
 import Footer from './components/Footer.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import Login from './components/Login.jsx';
+import AdminClientes from './components/AdminClientes.jsx';
 
 
 const AppContent = () => {
@@ -29,6 +31,8 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/contacto" element={<ContactPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminClientes />} />
         {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
       <WhatsAppButton />

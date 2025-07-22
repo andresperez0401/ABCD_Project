@@ -18,6 +18,7 @@
   margin-bottom: 20px;
   position: relative;
   align-items: center;
+  flex-direction: row;
 }
 
 .input-icon {
@@ -213,4 +214,16 @@
 .form-group textarea + .input-icon {
   align-items: flex-start;
   padding-top: 15px;
+}
+
+/* Asegurar que el icono se vea bien con textarea también */
+.form-group textarea {
+  padding-left: 45px;
+}
+
+/* Alinea verticalmente el icono del textarea */
+.form-group textarea + .input-icon {
+  top: 15px;
+  position: absolute;
+  left: 15px;
 }

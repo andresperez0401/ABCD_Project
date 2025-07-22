@@ -6,7 +6,7 @@ import "../styles/CourseCards.css";
 import CourseModal from "./CourseModal.jsx";
 
 export default function CourseCards() {
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,6 +24,8 @@ export default function CourseCards() {
         setSlidesToShow(3); // 3 en desktop grande
       }
     };
+
+    let response = actions.getCursos(); // Cargar cursos al iniciar
 
     updateSlides();
     window.addEventListener('resize', updateSlides);
@@ -73,7 +75,7 @@ export default function CourseCards() {
         <div className="cards-wrapper">
           {visibleCourses.map((curso, idx) => (
             <div
-              key={curso.country}
+              key={curso.idCurso}
               className="card"
             >
               <div
@@ -81,14 +83,14 @@ export default function CourseCards() {
                 style={{ backgroundImage: `url(${curso.imageUrl})` }}
               />
               <div className="card-content">
-                <h3>{curso.name}</h3>
-                <p className="card-desc">{curso.description}</p>
+                <h3>{curso.nombre}</h3>
+                <p className="card-desc">{curso.descripcion}</p>
                 <ul className="card-info">
-                  <li><FaMapMarkerAlt /> {curso.destinos}</li>
+                  <li><FaMapMarkerAlt /> {curso.destino.nombre}</li>
                   <li><FaUsers /> {curso.edades}</li>
-                  <li><FaClock /> {curso.duration}</li>
-                  <li><FaCouch /> {curso.services}</li>
-                  <li><FaLanguage /> {curso.idiomas}</li>
+                  <li><FaClock /> {curso.duracion}</li>
+                  {/* <li><FaCouch /> {curso.servicios}</li> */}
+                  <li><FaLanguage /> {curso.idioma.nombre}</li>
                 </ul>
                 <button className="card-btn" onClick={() => handleViewMore(curso)}>
                   Ver más

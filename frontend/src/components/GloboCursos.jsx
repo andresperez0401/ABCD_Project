@@ -7,6 +7,17 @@ import "../styles/GloboCursos.css";
 
 Modal.setAppElement("#root");
 
+// Agrega este mapeo de nombres en la parte superior de tu componente
+const COUNTRY_NAME_MAP = {
+  "Australia": "Australia",
+  "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
+  "Canada": "Canada",
+  "EEUU": "United States",
+  "South Africa": "South Africa",
+  "United Arab Emirates": "United Arab Emirates",
+  "Malta": "Malta"
+};
+
 export default function GloboCursos() {
   // Referencias
   const globeEl = useRef();
@@ -121,20 +132,24 @@ export default function GloboCursos() {
       .showGraticules(false)
       .polygonsData(world)
       .polygonCapColor(({ properties: d }) => {
-        // Usamos la ref para obtener el valor actual de selected
         const currentSelected = selectionRef.current;
-        if (currentSelected && currentSelected.country === d.name) return "#ffffff";
-        return SELECTED_COUNTRIES.includes(d.name) ? "#e0f7fa" : "#78909c";
+        const mappedName = COUNTRY_NAME_MAP[d.name] || d.name;
+        
+        if (currentSelected && currentSelected.country === mappedName) return "#ffffff";
+        return SELECTED_COUNTRIES.includes(mappedName) ? "#e0f7fa" : "#78909c";
       })
       .polygonSideColor(() => "rgba(0,0,0,0)")
       .polygonStrokeColor(() => "#37474f")
       .polygonAltitude(({ properties: d }) => {
         const currentSelected = selectionRef.current;
-        if (currentSelected && currentSelected.country === d.name) return 0.05;
-        return SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005;
+        const mappedName = COUNTRY_NAME_MAP[d.name] || d.name;
+        
+        if (currentSelected && currentSelected.country === mappedName) return 0.05;
+        return SELECTED_COUNTRIES.includes(mappedName) ? 0.03 : 0.005;
       })
       .onPolygonClick(p => {
-        const curso = cursos.find(c => c.country === p.properties.name);
+        const countryName = COUNTRY_NAME_MAP[p.properties.name] || p.properties.name;
+        const curso = cursos.find(c => c.country === countryName);
         setSelected(curso);
       })
       .onPolygonHover(() => null)
@@ -183,24 +198,25 @@ export default function GloboCursos() {
   // ========================================================
   // 4. ACTUALIZAR EL GLOBO CUANDO CAMBIA LA SELECCIÓN
   // ========================================================
+  // Actualiza el useEffect que maneja los cambios de selección
   useEffect(() => {
     if (!globeInstanceRef.current) return;
     
-    // Actualizamos las funciones de estilo
     globeInstanceRef.current
       .polygonCapColor(({ properties: d }) => {
-        if (selected && selected.country === d.name) return "#ffffff";
-        return SELECTED_COUNTRIES.includes(d.name) ? "#e0f7fa" : "#78909c";
+        const mappedName = COUNTRY_NAME_MAP[d.name] || d.name;
+        if (selected && selected.country === mappedName) return "#ffffff";
+        return SELECTED_COUNTRIES.includes(mappedName) ? "#e0f7fa" : "#78909c";
       })
       .polygonAltitude(({ properties: d }) => {
-        if (selected && selected.country === d.name) return 0.05;
-        return SELECTED_COUNTRIES.includes(d.name) ? 0.03 : 0.005;
+        const mappedName = COUNTRY_NAME_MAP[d.name] || d.name;
+        if (selected && selected.country === mappedName) return 0.05;
+        return SELECTED_COUNTRIES.includes(mappedName) ? 0.03 : 0.005;
       });
 
-    // Forzar actualización de los polígonos
+    // Forzar actualización
     const currentData = globeInstanceRef.current.polygonsData();
     globeInstanceRef.current.polygonsData([...currentData]);
-    
   }, [selected, SELECTED_COUNTRIES]);
 
   // ========================================================
@@ -245,42 +261,73 @@ export default function GloboCursos() {
           onRequestClose={() => setSelected(null)}
           style={{
             overlay: {
-              position: "fixed", 
-              top: 0, 
-              left: 0, 
-              right: 0, 
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
               bottom: 0,
-              backgroundColor: "rgba(51, 51, 51, 0.8)", 
-              zIndex: 10000
+              backgroundColor: "rgba(0, 0, 0, 0.75)",
+              zIndex: 1000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "20px"
             },
             content: {
-              position: "absolute",
-              top: "50%", 
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              background: "#fff", 
+              position: "relative",
+              inset: "unset",
+              background: "#ffffff",
+              borderRadius: "16px",
+              padding: "32px",
+              maxWidth: "800px",
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "visible",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
               color: "#222",
-              maxWidth: "400px", 
-              width: "90%",
-              padding: "30px", 
-              borderRadius: "10px",
-              boxShadow: "0 0 20px rgba(0,0,0,0.8)",
-              border: "none", 
-              zIndex: 10001
+              fontSize: "1.1rem",
+              lineHeight: "1.6"
             }
           }}
         >
-          <header className="modal-header">
-            <h2>{selected.name}</h2>
+          <header style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "24px"
+          }}>
+            <h2 style={{
+              margin: 0,
+              fontSize: "1.5rem",
+              fontWeight: "bold"
+            }}>{selected.name}</h2>
             <button 
-              className="modal-close" 
-              onClick={() => setSelected(null)}
+              onClick={() => setSelected(null)} 
               aria-label="Cerrar modal"
-            >
-              ×
-            </button>
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "1.8rem",
+                cursor: "pointer",
+                color: "#666"
+              }}
+            >×</button>
           </header>
-          <div className="modal-body">
+
+          <div>
+            {selected.imageUrl && (
+              <img 
+                src={selected.imageUrl} 
+                alt={`Imagen de ${selected.name}`}
+                style={{
+                  width: "100%",
+                  maxHeight: "350px",
+                  objectFit: "cover",
+                  borderRadius: "12px",
+                  marginBottom: "20px"
+                }}
+              />
+            )}
             <p>{selected.description}</p>
           </div>
         </Modal>

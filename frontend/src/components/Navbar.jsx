@@ -1,54 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import '../styles/Navbar.css';
-import { Link } from 'react-router-dom';
+import logo from "../images/abcd.jpg";
 
-export const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar = () => {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  }
+  // Manejar el scroll para cambiar el estilo del navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Cerrar el menú al cambiar de ruta
+  useEffect(() => {
+    setOpen(false);
+  }, []);
+
+  const navLinks = [
+    { to: '/', label: 'Inicio' },
+    // { to: '/servicios', label: 'Servicios' },
+    // { to: '/cursos', label: 'Cursos' },
+    { to: '/contacto', label: 'Contacto' }
+  ];
 
   return (
-    <nav className="navbar navbar-expand-lg shadow-sm">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <h1 className="navbar-title">ABCD Languages</h1>
-        </Link>
+    <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
+      <div className="nav-container">
+        <div className="nav-brand">
+          <NavLink to="/" className="nav-logo-link">
+            <img src={logo} alt="ABCD Languages" className="nav-logo" />
+          </NavLink>
+        </div>
 
-        {/* Botón hamburguesa */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          onClick={toggleMenu}
-          aria-controls="navbarSupportedContent"
-          aria-expanded={isOpen}
+        <button 
+          className={`nav-toggle ${open ? 'open' : ''}`}
+          onClick={() => setOpen(!open)}
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="nav-toggle-line"></span>
+          <span className="nav-toggle-line"></span>
+          <span className="nav-toggle-line"></span>
         </button>
 
-        {/* Menú colapsable */}
-        <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            {/* Aquí puedes meter tus links */}
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">Inicio</Link>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Servicios</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Cursos</a>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contacto">Contacto</Link>
-            </li>
+        <nav className={`nav-menu ${open ? 'open' : ''}`}>
+          <ul className="nav-list">
+            {navLinks.map((link) => (
+              <li key={link.to} className="nav-item">
+                <NavLink 
+                  to={link.to} 
+                  className={({isActive}) => 
+                    `nav-link ${isActive ? 'active' : ''}`
+                  }
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
-        </div>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
-}
+};
 
 export default Navbar;

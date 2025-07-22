@@ -1,38 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "../styles/VideoTestimonials.css";
+import { useContext } from "react";
+import{ Context } from "../store/appContext";
 
-const testimonials = [
-  {
-    name: "María Pérez",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    country: "España",
-    course: "Inglés Intensivo"
-  },
-  {
-    name: "Juan Sánchez",
-    videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U",
-    country: "Francia",
-    course: "Francés Avanzado"
-  },
-  {
-    name: "Luisa Gómez",
-    videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0",
-    country: "Alemania",
-    course: "Alemán para Negocios"
-  },
-  {
-    name: "Carlos Rodríguez",
-    videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw",
-    country: "Italia",
-    course: "Italiano Cultural"
-  },
-];
+// const testimonials = [
+//   {
+//     name: "María Pérez",
+//     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+//     country: "España",
+//     course: "Inglés Intensivo"
+//   },
+//   {
+//     name: "Juan Sánchez",
+//     videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U",
+//     country: "Francia",
+//     course: "Francés Avanzado"
+//   },
+//   {
+//     name: "Luisa Gómez",
+//     videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0",
+//     country: "Alemania",
+//     course: "Alemán para Negocios"
+//   },
+//   {
+//     name: "Carlos Rodríguez",
+//     videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw",
+//     country: "Italia",
+//     course: "Italiano Cultural"
+//   },
+// ];
 
 const VideoTestimonials = () => {
+  const { store, actions } = useContext(Context);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
+
+  useEffect(() => {
+    actions.getTestimonios();
+  }, []);
+
+  const testimonials = store.testimonios;
 
   const goNext = () => {
     setCurrentIndex(prev => 
@@ -83,20 +92,24 @@ const VideoTestimonials = () => {
           <div className="carousel-slides">
             {testimonials.map((testimonial, index) => (
               <div 
-                key={index} 
+                key={testimonial.idTestimonio} 
                 className={`video-slide ${index === currentIndex ? 'active' : ''}`}
               >
                 <div className="video-container">
                   <iframe
-                    src={testimonial.videoUrl}
-                    title={`Testimonio de ${testimonial.name}`}
+                    src={testimonial.videoUrl
+                      // Si es youtu.be/<id>
+                      .replace('https://youtu.be/', 'https://www.youtube.com/embed/')
+                      // Si es youtube.com/watch?v=<id>
+                      .replace('watch?v=', 'embed/')}
+                    title={`Testimonio de ${testimonial.nombre}`}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 </div>
                 <div className="testimonial-info">
-                  <p className="testimonial-name">{testimonial.name}</p>
-                  <p className="testimonial-meta">{testimonial.country} • {testimonial.course}</p>
+                  <p className="testimonial-name">{testimonial.nombre}</p>
+                  <p className="testimonial-meta">{testimonial.mensaje}</p>
                 </div>
               </div>
             ))}
