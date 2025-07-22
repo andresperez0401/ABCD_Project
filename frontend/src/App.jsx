@@ -14,6 +14,8 @@ import Footer from './components/Footer.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import Login from './components/Login.jsx';
 import AdminClientes from './components/AdminClientes.jsx';
+import Servicios from './components/Servicios.jsx';
+import Destinos from './components/Destinos.jsx';
 
 
 const AppContent = () => {
@@ -33,6 +35,8 @@ const AppContent = () => {
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminClientes />} />
+        <Route path="/servicios" element={<Servicios />} />
+        <Route path="/destinos" element={<Destinos />} />
         {/* <Route path="/home" element={<ListPaddel />} /> */}
       </Routes>
       <WhatsAppButton />
