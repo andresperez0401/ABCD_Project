@@ -445,6 +445,81 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      // Actualizar un curso
+    updateCurso: async (id, cursoData) => {
+      const store = getStore();
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/curso/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${store.token}`
+          },
+          body: JSON.stringify(cursoData)
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          const updatedCursos = store.cursos.map(curso => 
+            curso.idCurso === id ? data : curso
+          );
+          setStore({ ...getStore(), cursos: updatedCursos });
+          return { success: true, message: "Curso actualizado" };
+        } else {
+          return { success: false, message: data.error || "Error al actualizar curso" };
+        }
+      } catch (error) {
+        return { success: false, message: "Error de conexión: " + error.message };
+      }
+    },
+
+    // Eliminar un curso
+    deleteCurso: async (id) => {
+      const store = getStore();
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/curso/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${store.token}`
+          }
+        });
+
+        if (response.ok) {
+          const filteredCursos = store.cursos.filter(curso => curso.idCurso !== id);
+          setStore({ ...getStore(), cursos: filteredCursos });
+          return { success: true, message: "Curso eliminado" };
+        } else {
+          const data = await response.json();
+          return { success: false, message: data.error || "Error al eliminar curso" };
+        }
+      } catch (error) {
+        return { success: false, message: "Error de conexión: " + error.message };
+      }
+    },
+
+
+      //-------------------------------------------------------------------------------------------
+      //IDIOMAS
+      //-------------------------------------------------------------------------------------------
+
+      getIdiomas: async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/idioma`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          setStore({ ...getStore(), idiomas: data });
+          return { success: true, idiomas: data };
+        } else {
+          return { success: false, message: data.error || "Error al obtener idiomas" };
+        }
+      } catch (error) {
+        return { success: false, message: "Error de conexión: " + error.message };
+      }
+    },
+
+
       //-------------------------------------------------------------------------------------------
       // SERVICIOS
       //-------------------------------------------------------------------------------------------
