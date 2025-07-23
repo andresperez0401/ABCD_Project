@@ -1,4 +1,4 @@
-/* AdminNavbar - Estilo minimalista como AdminClientes */
+/* AdminNavbar - Responsive y minimalista */
 .admin-navbar-container {
   position: fixed;
   top: 0;
@@ -54,6 +54,7 @@
   letter-spacing: -0.025em;
 }
 
+/* Desktop Navigation */
 .admin-navbar-links {
   display: flex;
   margin-left: 50px;
@@ -88,6 +89,7 @@
   font-size: 1rem;
 }
 
+/* Desktop User Section */
 .admin-navbar-user {
   margin-left: auto;
   display: flex;
@@ -144,41 +146,288 @@
   border-color: #fca5a5;
 }
 
-/* Responsive */
+/* Mobile Menu Button */
+.admin-mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.admin-mobile-menu-btn:hover {
+  background: #f3f4f6;
+  color: #3b82f6;
+}
+
+/* Mobile Menu Overlay */
+.admin-mobile-overlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+}
+
+.admin-mobile-menu {
+  background: white;
+  width: 100%;
+  max-width: 320px;
+  height: calc(100vh - 70px);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  animation: slideInLeft 0.3s ease;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Mobile User Section */
+.admin-mobile-user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.admin-mobile-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-mobile-user-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.admin-mobile-user-role {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Mobile Navigation Links */
+.admin-mobile-nav-links {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.admin-mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.admin-mobile-nav-link:hover {
+  background: #f9fafb;
+  color: #3b82f6;
+}
+
+.admin-mobile-nav-link.admin-active {
+  background: #eff6ff;
+  color: #3b82f6;
+  border-left-color: #3b82f6;
+  font-weight: 600;
+}
+
+.admin-mobile-nav-link i:first-child {
+  font-size: 1.1rem;
+  width: 20px;
+}
+
+.admin-mobile-nav-link span {
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.admin-mobile-nav-link i:last-child {
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+/* Mobile Logout Button */
+.admin-mobile-logout-btn {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 16px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  margin: 16px 20px 20px;
+  border-radius: 8px;
+}
+
+.admin-mobile-logout-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.admin-mobile-logout-btn i {
+  font-size: 1.1rem;
+}
+
+/* Utility Classes */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 992px) {
-  .admin-navbar-links {
+  .desktop-only {
     display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
+  .admin-mobile-menu-btn {
+    display: flex;
   }
 }
 
 @media (max-width: 768px) {
   .admin-navbar-container {
-    padding: 0 15px;
-  }
-
-  .admin-user-name {
-    display: none;
-  }
-
-  .admin-logout-btn span {
-    display: none;
+    padding: 0 20px;
   }
 
   .admin-logo-text {
     font-size: 1.2rem;
   }
+
+  .admin-logo-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+  }
+
+  .admin-logo-icon i {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
   .admin-navbar-container {
-    padding: 0 10px;
+    padding: 0 15px;
   }
 
-  .admin-navbar-links {
-    margin-left: 20px;
+  .admin-logo-text {
+    font-size: 1.1rem;
   }
 
-  .admin-navbar-user {
-    gap: 10px;
+  .admin-logo-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+
+  .admin-logo-icon i {
+    font-size: 1rem;
+  }
+
+  .admin-mobile-menu {
+    max-width: 280px;
+  }
+
+  .admin-mobile-user-section {
+    padding: 20px 16px;
+  }
+
+  .admin-mobile-nav-link {
+    padding: 14px 16px;
+  }
+
+  .admin-mobile-logout-btn {
+    margin: 12px 16px 16px;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-navbar-container {
+    padding: 0 12px;
+  }
+
+  .admin-logo-text {
+    font-size: 1rem;
+  }
+
+  .admin-mobile-menu {
+    max-width: 260px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .admin-mobile-menu {
+    animation: none;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
+
+/* Dark mode support (opcional) */
+@media (prefers-color-scheme: dark) {
+  .admin-navbar-container {
+    background: #1f2937;
+    border-bottom-color: #374151;
+  }
+
+  .admin-logo-link {
+    color: #f9fafb;
+  }
+
+  .admin-mobile-menu {
+    background: #1f2937;
+  }
+
+  .admin-mobile-user-section {
+    background: #111827;
+    border-bottom-color: #374151;
+  }
+
+  .admin-mobile-user-name {
+    color: #f9fafb;
+  }
+
+  .admin-mobile-nav-link {
+    color: #d1d5db;
+  }
+
+  .admin-mobile-nav-link:hover {
+    background: #374151;
   }
 }

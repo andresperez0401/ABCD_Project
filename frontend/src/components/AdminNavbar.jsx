@@ -2,13 +2,14 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Context } from "../store/appContext"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import "../styles/AdminNavbar.css"
 
 const AdminNavbar = () => {
   const { store, actions } = useContext(Context)
   const location = useLocation()
   const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const isActive = (path) => {
     return location.pathname === path
@@ -17,6 +18,14 @@ const AdminNavbar = () => {
   const onLogout = () => {
     actions.logout()
     navigate("/")
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
   }
 
   // Obtener inicial del email del usuario
@@ -45,7 +54,8 @@ const AdminNavbar = () => {
         </Link>
       </div>
 
-      <div className="admin-navbar-links">
+      {/* Desktop Navigation */}
+      <div className="admin-navbar-links desktop-only">
         <Link to="/admin" className={`admin-nav-link ${isActive("/admin") ? "admin-active" : ""}`}>
           <i className="fas fa-users"></i>
           <span>Clientes</span>
@@ -56,7 +66,8 @@ const AdminNavbar = () => {
         </Link>
       </div>
 
-      <div className="admin-navbar-user">
+      {/* Desktop User Section */}
+      <div className="admin-navbar-user desktop-only">
         <div className="admin-user-info">
           <div className="admin-user-avatar">
             <span>{getUserInitial()}</span>
@@ -68,6 +79,57 @@ const AdminNavbar = () => {
           <span>Salir</span>
         </button>
       </div>
+
+      {/* Mobile Menu Button */}
+      <button className="admin-mobile-menu-btn mobile-only" onClick={toggleMobileMenu} aria-label="Toggle menu">
+        <i className={`fas ${isMobileMenuOpen ? "fa-times" : "fa-bars"}`}></i>
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="admin-mobile-overlay" onClick={closeMobileMenu}>
+          <div className="admin-mobile-menu" onClick={(e) => e.stopPropagation()}>
+            {/* Mobile User Info */}
+            <div className="admin-mobile-user-section">
+              <div className="admin-user-avatar">
+                <span>{getUserInitial()}</span>
+              </div>
+              <div className="admin-mobile-user-info">
+                <span className="admin-mobile-user-name">{getUserName()}</span>
+                <span className="admin-mobile-user-role">Administrador</span>
+              </div>
+            </div>
+
+            {/* Mobile Navigation Links */}
+            <div className="admin-mobile-nav-links">
+              <Link
+                to="/admin"
+                className={`admin-mobile-nav-link ${isActive("/admin") ? "admin-active" : ""}`}
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-users"></i>
+                <span>Clientes</span>
+                <i className="fas fa-chevron-right"></i>
+              </Link>
+              <Link
+                to="/admin/cursos"
+                className={`admin-mobile-nav-link ${isActive("/admin/cursos") ? "admin-active" : ""}`}
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-book"></i>
+                <span>Cursos</span>
+                <i className="fas fa-chevron-right"></i>
+              </Link>
+            </div>
+
+            {/* Mobile Logout Button */}
+            <button className="admin-mobile-logout-btn" onClick={onLogout}>
+              <i className="fas fa-sign-out-alt"></i>
+              <span>Cerrar Sesión</span>
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

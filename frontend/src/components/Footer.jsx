@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiBook, FiGlobe, FiMessageSquare, FiLock } from 'react-icons/fi';
+import { FiBook, FiGlobe, FiHome, FiMessageSquare, FiLock } from 'react-icons/fi';
 import '../styles/Footer.css';
 import canchaLogoSinFondo from "../images/abcd.jpg";
 
@@ -23,11 +23,11 @@ const Footer = () => {
             <h4>Explorar</h4>
             <Link to="/cursos"><FiBook className="link-icon" /> Cursos</Link>
             <Link to="/destinos"><FiGlobe className="link-icon" /> Destinos</Link>
+            <Link to="/"> <FiHome className='link-icon' /> Home </Link>
           </div>
           
           <div className="link-group">
             <h4>Empresa</h4>
-            <Link to="/nosotros">Sobre nosotros</Link>
             <Link to="/contacto">Contacto</Link>
           </div>
         </div>

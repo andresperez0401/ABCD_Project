@@ -3,6 +3,7 @@
 import { useState, useEffect, useContext } from "react"
 import { Context } from "../store/appContext"
 import AdminNavbar from "./AdminNavbar"
+import { toast } from "react-toastify"
 import "../styles/AdminCursos.css"
 
 const AdminCursos = () => {
@@ -164,18 +165,41 @@ const AdminCursos = () => {
       imageUrl,
     }
 
-    if (isEditing) {
-      await actions.updateCurso(selectedCurso.idCurso, cursoData)
-    } else {
-      await actions.createCurso(cursoData)
+    try {
+      if (isEditing) {
+        const result = await actions.updateCurso(selectedCurso.idCurso, cursoData)
+        if (result.success) {
+          toast.success("Curso actualizado exitosamente")
+        } else {
+          toast.error(result.message || "Error al actualizar el curso")
+        }
+      } else {
+        const result = await actions.createCurso(cursoData)
+        if (result.success) {
+          toast.success("Curso creado exitosamente")
+        } else {
+          toast.error(result.message || "Error al crear el curso")
+        }
+      }
+    } catch (error) {
+      toast.error("Error de conexión")
     }
 
     setShowModal(false)
   }
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro de eliminar este curso?")) {
-      await actions.deleteCurso(id)
+    if (window.confirm("¿Estás seguro de que deseas eliminar este curso? Esta acción no se puede deshacer.")) {
+      try {
+        const result = await actions.deleteCurso(id)
+        if (result.success) {
+          toast.success("Curso eliminado exitosamente")
+        } else {
+          toast.error(result.message || "Error al eliminar el curso")
+        }
+      } catch (error) {
+        toast.error("Error de conexión")
+      }
     }
   }
 
@@ -218,7 +242,8 @@ const AdminCursos = () => {
           </div>
         ) : (
           <>
-            <div className="admin-table-container">
+            {/* Vista de tabla para desktop y tablet */}
+            <div className="admin-table-container desktop-table">
               <table className="admin-cursos-table">
                 <thead>
                   <tr>
@@ -255,14 +280,14 @@ const AdminCursos = () => {
                         <td>
                           <div className="admin-actions">
                             <button className="admin-btn-edit" onClick={() => openEditModal(curso)} title="Editar">
-                              <i className="fas fa-edit"></i>
+                              <i className="fas fa-pencil-alt"></i>
                             </button>
                             <button
                               className="admin-btn-delete"
                               onClick={() => handleDelete(curso.idCurso)}
                               title="Eliminar"
                             >
-                              <i className="fas fa-trash"></i>
+                              <i className="fas fa-trash-alt"></i>
                             </button>
                           </div>
                         </td>
@@ -280,6 +305,81 @@ const AdminCursos = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            {/* Vista de cards para móvil */}
+            <div className="admin-cards-container mobile-cards">
+              {currentItems.length > 0 ? (
+                currentItems.map((curso) => (
+                  <div key={curso.idCurso} className="admin-curso-card">
+                    <div className="admin-card-header">
+                      <div className="admin-card-id">
+                        <span className="admin-id-badge">{curso.idCurso}</span>
+                      </div>
+                      <div className="admin-card-actions">
+                        <button className="admin-btn-edit" onClick={() => openEditModal(curso)} title="Editar">
+                          <i className="fas fa-pencil-alt"></i>
+                        </button>
+                        <button
+                          className="admin-btn-delete"
+                          onClick={() => handleDelete(curso.idCurso)}
+                          title="Eliminar"
+                        >
+                          <i className="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="admin-card-content">
+                      <h3 className="admin-card-title">{curso.nombre}</h3>
+                      <p className="admin-card-description">{curso.descripcion}</p>
+
+                      <div className="admin-card-details">
+                        <div className="admin-card-detail-item">
+                          <span className="admin-detail-label">Duración:</span>
+                          <span className="admin-detail-value">{curso.duracion}</span>
+                        </div>
+
+                        <div className="admin-card-detail-item">
+                          <span className="admin-detail-label">Nivel:</span>
+                          <span className={`admin-nivel-badge admin-nivel-${curso.nivel.toLowerCase()}`}>
+                            {curso.nivel}
+                          </span>
+                        </div>
+
+                        <div className="admin-card-detail-item">
+                          <span className="admin-detail-label">Tipo:</span>
+                          <span className="admin-detail-value">{curso.tipoCurso}</span>
+                        </div>
+
+                        <div className="admin-card-detail-item">
+                          <span className="admin-detail-label">Edades:</span>
+                          <span className="admin-detail-value">{curso.edades}</span>
+                        </div>
+
+                        {curso.destino && (
+                          <div className="admin-card-detail-item">
+                            <span className="admin-detail-label">Destino:</span>
+                            <span className="admin-detail-value">{curso.destino.nombre}</span>
+                          </div>
+                        )}
+
+                        {curso.idioma && (
+                          <div className="admin-card-detail-item">
+                            <span className="admin-detail-label">Idioma:</span>
+                            <span className="admin-detail-value">{curso.idioma.nombre}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="admin-empty-state-mobile">
+                  <i className="fas fa-search"></i>
+                  <p>No se encontraron cursos</p>
+                </div>
+              )}
             </div>
 
             {filteredCursos.length > 0 && totalPages > 1 && (

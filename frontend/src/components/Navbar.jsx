@@ -7,21 +7,14 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Manejar el scroll para cambiar el estilo del navbar
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Cerrar el menú al cambiar de ruta
   useEffect(() => {
     setOpen(false);
   }, []);
@@ -41,6 +34,7 @@ const Navbar = () => {
           <NavLink to="/" className="nav-logo-link">
             <img src={logo} alt="ABCD Languages" className="nav-logo" />
           </NavLink>
+          <span className="nav-title">ABCD Languages</span> {/* 🔥 EL TÍTULO AQUÍ */}
         </div>
 
         <button 

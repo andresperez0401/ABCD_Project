@@ -643,6 +643,32 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      deleteCliente: async (id) => {
+        const store = getStore()
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cliente/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          })
+
+          const data = await response.json()
+
+          if (response.ok) {
+            // Actualizar el store local removiendo el cliente eliminado
+            const updatedClientes = store.clientes.filter((cliente) => cliente.idCliente !== id)
+            setStore({ ...store, clientes: updatedClientes })
+
+            return { success: true, message: "Cliente eliminado exitosamente" }
+          } else {
+            return { success: false, message: data.error || "Error al eliminar cliente" }
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message }
+        }
+      },
+
       //-------------------------------------------------------------------------------------------
       // TESTIMONIOS
       //-------------------------------------------------------------------------------------------

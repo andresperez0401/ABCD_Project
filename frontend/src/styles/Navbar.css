@@ -56,8 +56,24 @@
   z-index: 1001;
 }
 
+.nav-title {
+  margin-left: 10px;
+  font-family: var(--font-family);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #090a0a;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .nav-title {
+    display: none;
+  }
+}
+
+
 .nav-logo {
-  height: 40px;
+  height: 70px;
   transition: transform 0.3s var(--easing);
 }
 

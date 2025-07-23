@@ -1,118 +1,138 @@
-// src/components/admin/AdminClientes.jsx
-import React, { useState, useEffect, useContext } from 'react';
-import { Context } from '../store/appContext';
-import AdminNavbar from './AdminNavbar';
-import '../styles/AdminClientes.css';
+"use client"
+
+import { useState, useEffect, useContext } from "react"
+import { Context } from "../store/appContext"
+import AdminNavbar from "./AdminNavbar"
+import { toast } from "react-toastify"
+import "../styles/AdminClientes.css"
 
 const AdminClientes = () => {
-  const { store, actions } = useContext(Context);
-  const [clientes, setClientes] = useState([]);
-  const [selectedCliente, setSelectedCliente] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const [filterEstado, setFilterEstado] = useState('all');
+  const { store, actions } = useContext(Context)
+  const [clientes, setClientes] = useState([])
+  const [selectedCliente, setSelectedCliente] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(10)
+  const [filterEstado, setFilterEstado] = useState("all")
 
   useEffect(() => {
     const fetchClientes = async () => {
-      setLoading(true);
-      await actions.getClientes();
-      setLoading(false);
-    };
-    
-    fetchClientes();
-  }, []);
+      setLoading(true)
+      await actions.getClientes()
+      setLoading(false)
+    }
+
+    fetchClientes()
+  }, [])
 
   useEffect(() => {
-    setClientes(store.clientes);
-  }, [store.clientes]);
+    setClientes(store.clientes)
+  }, [store.clientes])
 
   // Filtrar clientes basado en búsqueda y estado
-  const filteredClientes = clientes.filter(cliente => {
-    const matchesSearch = (
+  const filteredClientes = clientes.filter((cliente) => {
+    const matchesSearch =
       cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.telefono.includes(searchTerm)
-    );
-    
-    const matchesEstado = filterEstado === 'all' || cliente.estado === filterEstado;
-    
-    return matchesSearch && matchesEstado;
-  });
+
+    const matchesEstado = filterEstado === "all" || cliente.estado === filterEstado
+
+    return matchesSearch && matchesEstado
+  })
 
   // Paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredClientes.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredClientes.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = filteredClientes.slice(indexOfFirstItem, indexOfLastItem)
+  const totalPages = Math.ceil(filteredClientes.length / itemsPerPage)
 
   const handleRowClick = (cliente) => {
-    setSelectedCliente(cliente);
-  };
+    setSelectedCliente(cliente)
+  }
 
   const closeDetail = () => {
-    setSelectedCliente(null);
-  };
+    setSelectedCliente(null)
+  }
 
   const handleEstadoChange = async (e, cliente) => {
-    const newEstado = e.target.value;
-    
+    const newEstado = e.target.value
+
     // Actualizar en el backend
-    const result = await actions.updateCliente(cliente.idCliente, { estado: newEstado });
-    
+    const result = await actions.updateCliente(cliente.idCliente, { estado: newEstado })
+
     if (result.success) {
-        // Actualización local
-        setClientes(prev => prev.map(c => 
-        c.idCliente === cliente.idCliente ? {...c, estado: newEstado} : c
-        ));
-        
-        if (selectedCliente?.idCliente === cliente.idCliente) {
-        setSelectedCliente({...selectedCliente, estado: newEstado});
-        }
+      // Actualización local
+      setClientes((prev) => prev.map((c) => (c.idCliente === cliente.idCliente ? { ...c, estado: newEstado } : c)))
+
+      if (selectedCliente?.idCliente === cliente.idCliente) {
+        setSelectedCliente({ ...selectedCliente, estado: newEstado })
+      }
+
+      toast.success("Estado actualizado exitosamente")
     } else {
-        console.error("Error al actualizar estado:", result.message);
-        alert('Error al actualizar: ' + result.message);
+      console.error("Error al actualizar estado:", result.message)
+      toast.error("Error al actualizar: " + result.message)
     }
- }; 
+  }
+
+  const handleDeleteCliente = async (cliente) => {
+    if (
+      window.confirm(
+        `¿Estás seguro de que deseas eliminar al cliente "${cliente.nombre}"? Esta acción no se puede deshacer.`,
+      )
+    ) {
+      try {
+        const result = await actions.deleteCliente(cliente.idCliente)
+        if (result.success) {
+          toast.success("Cliente eliminado exitosamente")
+          // Cerrar el modal si el cliente eliminado estaba seleccionado
+          if (selectedCliente?.idCliente === cliente.idCliente) {
+            setSelectedCliente(null)
+          }
+        } else {
+          toast.error(result.message || "Error al eliminar el cliente")
+        }
+      } catch (error) {
+        toast.error("Error de conexión")
+      }
+    }
+  }
 
   const renderEstadoBadge = (estado) => {
     const estados = {
-      'Registrado': 'badge-blue',
-      'Contactado': 'badge-yellow',
-      'Interesado': 'badge-orange',
-      'Convertido': 'badge-green',
-      'Perdido': 'badge-red'
-    };
-    
-    return <span className={`estado-badge ${estados[estado] || ''}`}>{estado}</span>;
-  };
+      Registrado: "badge-blue",
+      Contactado: "badge-yellow",
+      Interesado: "badge-orange",
+      Convertido: "badge-green",
+      Perdido: "badge-red",
+    }
+
+    return <span className={`estado-badge ${estados[estado] || ""}`}>{estado}</span>
+  }
 
   return (
     <div className="admin-container">
       <AdminNavbar />
-      
+
       <div className="admin-content">
         <div className="header-section">
           <h1>Administración de Clientes</h1>
           <div className="controls">
             <div className="search-box">
               <i className="fas fa-search"></i>
-              <input 
-                type="text" 
-                placeholder="Buscar clientes..." 
+              <input
+                type="text"
+                placeholder="Buscar clientes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <div className="filter-section">
               <label>Filtrar por estado:</label>
-              <select 
-                value={filterEstado} 
-                onChange={(e) => setFilterEstado(e.target.value)}
-                className="estado-filter"
-              >
+              <select value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)} className="estado-filter">
                 <option value="all">Todos</option>
                 <option value="Registrado">Registrado</option>
                 <option value="Contactado">Contactado</option>
@@ -141,15 +161,16 @@ const AdminClientes = () => {
                     <th>Teléfono</th>
                     <th>Interés</th>
                     <th>Estado</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentItems.length > 0 ? (
-                    currentItems.map(cliente => (
-                      <tr 
-                        key={cliente.idCliente} 
+                    currentItems.map((cliente) => (
+                      <tr
+                        key={cliente.idCliente}
                         onClick={() => handleRowClick(cliente)}
-                        className={selectedCliente?.idCliente === cliente.idCliente ? 'selected-row' : ''}
+                        className={selectedCliente?.idCliente === cliente.idCliente ? "selected-row" : ""}
                       >
                         <td>{cliente.idCliente}</td>
                         <td>{cliente.nombre}</td>
@@ -157,10 +178,10 @@ const AdminClientes = () => {
                         <td>{cliente.telefono}</td>
                         <td>{cliente.interes}</td>
                         <td>
-                          <select 
-                            value={cliente.estado} 
+                          <select
+                            value={cliente.estado}
                             onChange={(e) => handleEstadoChange(e, cliente)}
-                            onClick={e => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                             className="estado-select"
                           >
                             <option value="Registrado">Registrado</option>
@@ -171,11 +192,25 @@ const AdminClientes = () => {
                           </select>
                           {renderEstadoBadge(cliente.estado)}
                         </td>
+                        <td>
+                          <div className="admin-actions">
+                            <button
+                              className="admin-btn-delete"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteCliente(cliente)
+                              }}
+                              title="Eliminar cliente"
+                            >
+                              <i className="fas fa-trash-alt"></i>
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6" className="no-results">
+                      <td colSpan="7" className="no-results">
                         <i className="fas fa-exclamation-circle"></i> No se encontraron clientes
                       </td>
                     </tr>
@@ -186,17 +221,16 @@ const AdminClientes = () => {
 
             {filteredClientes.length > 0 && (
               <div className="pagination">
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} 
-                  disabled={currentPage === 1}
-                >
+                <button onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))} disabled={currentPage === 1}>
                   <i className="fas fa-chevron-left"></i>
                 </button>
-                
-                <span>Página {currentPage} de {totalPages}</span>
-                
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} 
+
+                <span>
+                  Página {currentPage} de {totalPages}
+                </span>
+
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
                   <i className="fas fa-chevron-right"></i>
@@ -209,11 +243,11 @@ const AdminClientes = () => {
 
       {selectedCliente && (
         <div className="cliente-detail-overlay" onClick={closeDetail}>
-          <div className="cliente-detail" onClick={e => e.stopPropagation()}>
+          <div className="cliente-detail" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={closeDetail}>
               <i className="fas fa-times"></i>
             </button>
-            
+
             <h2>Detalle del Cliente</h2>
             <div className="detail-grid">
               <div className="detail-item">
@@ -239,8 +273,8 @@ const AdminClientes = () => {
               <div className="detail-item">
                 <label>Estado:</label>
                 <div className="estado-container">
-                  <select 
-                    value={selectedCliente.estado} 
+                  <select
+                    value={selectedCliente.estado}
                     onChange={(e) => handleEstadoChange(e, selectedCliente)}
                     className="estado-select"
                   >
@@ -256,21 +290,17 @@ const AdminClientes = () => {
               <div className="detail-item full-width">
                 <label>Fecha de Registro:</label>
                 <span>
-                    {selectedCliente.fecha_registro 
-                    ? new Date(selectedCliente.fecha_registro).toLocaleDateString('es-ES', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                        }) 
-                    : 'N/A'}
+                  {selectedCliente.fecha_registro
+                    ? new Date(selectedCliente.fecha_registro).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    : "N/A"}
                 </span>
               </div>
-              {/* <div className="detail-item full-width">
-                <label>Último Contacto:</label>
-                <span>20 Julio, 2023 - Email de seguimiento enviado</span>
-              </div> */}
             </div>
-            
+
             <div className="action-buttons">
               <button className="btn-primary">
                 <i className="fas fa-envelope"></i> Enviar Email
@@ -281,12 +311,15 @@ const AdminClientes = () => {
               <button className="btn-warning">
                 <i className="fas fa-edit"></i> Editar
               </button>
+              <button className="btn-danger" onClick={() => handleDeleteCliente(selectedCliente)}>
+                <i className="fas fa-trash-alt"></i> Eliminar
+              </button>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AdminClientes;
+export default AdminClientes
