@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import "../styles/StatsBar.css";
 
 const stats = [
-  { label: "Estudiantes enviados", end: 2000, suffix: "+" },
-  { label: "Años de experiencia", end: 20, suffix: "+" },
-  { label: "Países destino", end: 12, suffix: "+" },
+  { label: "Estudiantes enviados", end: 500, suffix: "+" },
+  { label: "Años de experiencia", end: 12, suffix: "+" },
+  { label: "Países destino", end: 8, suffix: "+" },
 ];
 
 const StatsBar = () => {
