@@ -29,7 +29,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/', label: 'Inicio' },
     { to: '/servicios', label: 'Servicios' },
-    // { to: '/cursos', label: 'Cursos' },
+    { to: '/cursos', label: 'Cursos' },
     { to: '/destinos', label: 'Destinos' },
     { to: '/contacto', label: 'Contacto' }
   ];

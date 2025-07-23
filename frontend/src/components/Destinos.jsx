@@ -137,7 +137,7 @@ const Destinos = () => {
                 <div 
                   key={destino.idDestino} 
                   className="destino-card"
-                  onClick={() => handleViewDetails(destino.idDestino)}
+                //   onClick={() => handleViewDetails(destino.idDestino)}
                 >
                   {destino.imageUrl ? (
                     <img 
@@ -147,7 +147,7 @@ const Destinos = () => {
                     />
                   ) : (
                     <div className="image-placeholder">
-                      <i className="fas fa-globe-americas"></i>
+                      {/* <i className="fas fa-globe-americas"></i> */}
                     </div>
                   )}
                   
@@ -185,7 +185,7 @@ const Destinos = () => {
             <p>Descubre cómo podemos ayudarte a encontrar el destino perfecto para aprender idiomas</p>
             <button 
               className="cta-button"
-              onClick={() => navigate('/contacto')}
+              onClick={() => window.open(`https://wa.me/584142677943`, "_blank")}
             >
               Contáctanos <i className="fas fa-paper-plane"></i>
             </button>
