@@ -185,21 +185,29 @@ const AdminCursos = () => {
 
       <div className="admin-cursos-content">
         <div className="admin-cursos-header">
-          <h1 className="admin-cursos-title">Administración de Cursos</h1>
-          <div className="admin-cursos-controls">
-            <div className="admin-search-box">
-              <i className="fas fa-search"></i>
-              <input
-                type="text"
-                placeholder="Buscar cursos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <button className="admin-btn-add" onClick={openCreateModal}>
-              <i className="fas fa-plus"></i>
-              <span>Nuevo Curso</span>
-            </button>
+          <div>
+            <h1 className="admin-cursos-title">Gestión de Cursos</h1>
+            <p className="admin-cursos-subtitle">Administra todos los cursos disponibles</p>
+          </div>
+          <button className="admin-btn-add" onClick={openCreateModal}>
+            <i className="fas fa-plus"></i>
+            <span>Nuevo Curso</span>
+          </button>
+        </div>
+
+        <div className="admin-cursos-controls">
+          <div className="admin-search-box">
+            <i className="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Buscar cursos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="admin-results-info">
+            {filteredCursos.length} curso{filteredCursos.length !== 1 ? "s" : ""} encontrado
+            {filteredCursos.length !== 1 ? "s" : ""}
           </div>
         </div>
 
@@ -227,26 +235,46 @@ const AdminCursos = () => {
                   {currentItems.length > 0 ? (
                     currentItems.map((curso) => (
                       <tr key={curso.idCurso}>
-                        <td>{curso.idCurso}</td>
-                        <td>{curso.nombre}</td>
+                        <td>
+                          <span className="admin-id-badge">{curso.idCurso}</span>
+                        </td>
+                        <td>
+                          <div className="admin-curso-info">
+                            <span className="admin-curso-name">{curso.nombre}</span>
+                            <span className="admin-curso-desc">{curso.descripcion.substring(0, 50)}...</span>
+                          </div>
+                        </td>
                         <td>{curso.duracion}</td>
-                        <td>{curso.nivel}</td>
+                        <td>
+                          <span className={`admin-nivel-badge admin-nivel-${curso.nivel.toLowerCase()}`}>
+                            {curso.nivel}
+                          </span>
+                        </td>
                         <td>{curso.tipoCurso}</td>
                         <td>{curso.edades}</td>
                         <td>
-                          <button className="admin-btn-edit" onClick={() => openEditModal(curso)}>
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button className="admin-btn-delete" onClick={() => handleDelete(curso.idCurso)}>
-                            <i className="fas fa-trash"></i>
-                          </button>
+                          <div className="admin-actions">
+                            <button className="admin-btn-edit" onClick={() => openEditModal(curso)} title="Editar">
+                              <i className="fas fa-edit"></i>
+                            </button>
+                            <button
+                              className="admin-btn-delete"
+                              onClick={() => handleDelete(curso.idCurso)}
+                              title="Eliminar"
+                            >
+                              <i className="fas fa-trash"></i>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan="7" className="admin-no-results">
-                        <i className="fas fa-exclamation-circle"></i> No se encontraron cursos
+                        <div className="admin-empty-state">
+                          <i className="fas fa-search"></i>
+                          <p>No se encontraron cursos</p>
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -254,13 +282,13 @@ const AdminCursos = () => {
               </table>
             </div>
 
-            {filteredCursos.length > 0 && (
+            {filteredCursos.length > 0 && totalPages > 1 && (
               <div className="admin-pagination">
                 <button onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))} disabled={currentPage === 1}>
                   <i className="fas fa-chevron-left"></i>
                 </button>
 
-                <span>
+                <span className="admin-page-info">
                   Página {currentPage} de {totalPages}
                 </span>
 
@@ -276,7 +304,7 @@ const AdminCursos = () => {
         )}
       </div>
 
-      {/* Modal mejorado */}
+      {/* Modal sencillo y funcional */}
       {showModal && (
         <div className="admin-modal-overlay" onClick={() => setShowModal(false)}>
           <div className="admin-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -288,100 +316,97 @@ const AdminCursos = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="admin-modal-form">
-              <div className="admin-form-section">
-                <h3>Información Básica</h3>
-                <div className="admin-form-grid">
-                  <div className="admin-form-group admin-form-full">
-                    <label>Nombre del Curso*</label>
-                    <input
-                      type="text"
-                      name="nombre"
-                      value={formData.nombre}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Ingresa el nombre del curso"
-                    />
-                  </div>
+              <div className="admin-form-grid">
+                <div className="admin-form-group admin-form-full">
+                  <label>Nombre del Curso*</label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Ingresa el nombre del curso"
+                  />
+                </div>
 
-                  <div className="admin-form-group admin-form-full">
-                    <label>Descripción*</label>
-                    <textarea
-                      name="descripcion"
-                      value={formData.descripcion}
-                      onChange={handleInputChange}
-                      required
-                      rows="3"
-                      placeholder="Describe el curso..."
-                    />
-                  </div>
+                <div className="admin-form-group admin-form-full">
+                  <label>Descripción*</label>
+                  <textarea
+                    name="descripcion"
+                    value={formData.descripcion}
+                    onChange={handleInputChange}
+                    required
+                    rows="3"
+                    placeholder="Describe el curso..."
+                  />
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Duración*</label>
-                    <input
-                      type="text"
-                      name="duracion"
-                      value={formData.duracion}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Ej: 4 semanas"
-                    />
-                  </div>
+                <div className="admin-form-group">
+                  <label>Duración*</label>
+                  <input
+                    type="text"
+                    name="duracion"
+                    value={formData.duracion}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Ej: 4 semanas"
+                  />
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Nivel*</label>
-                    <select name="nivel" value={formData.nivel} onChange={handleInputChange} required>
-                      <option value="">Seleccionar nivel</option>
-                      <option value="Principiante">Principiante</option>
-                      <option value="Intermedio">Intermedio</option>
-                      <option value="Avanzado">Avanzado</option>
-                    </select>
-                  </div>
+                <div className="admin-form-group">
+                  <label>Nivel*</label>
+                  <select name="nivel" value={formData.nivel} onChange={handleInputChange} required>
+                    <option value="">Seleccionar nivel</option>
+                    <option value="Principiante">Principiante</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                  </select>
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Tipo de Curso*</label>
-                    <select name="tipoCurso" value={formData.tipoCurso} onChange={handleInputChange} required>
-                      <option value="">Seleccionar tipo</option>
-                      <option value="General">General</option>
-                      <option value="Intensivo">Intensivo</option>
-                      <option value="Especializado">Especializado</option>
-                    </select>
-                  </div>
+                <div className="admin-form-group">
+                  <label>Tipo de Curso*</label>
+                  <select name="tipoCurso" value={formData.tipoCurso} onChange={handleInputChange} required>
+                    <option value="">Seleccionar tipo</option>
+                    <option value="General">General</option>
+                    <option value="Intensivo">Intensivo</option>
+                    <option value="Especializado">Especializado</option>
+                  </select>
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Edades*</label>
-                    <input
-                      type="text"
-                      name="edades"
-                      value={formData.edades}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Ej: 18-25 años"
-                    />
-                  </div>
+                <div className="admin-form-group">
+                  <label>Edades*</label>
+                  <input
+                    type="text"
+                    name="edades"
+                    value={formData.edades}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Ej: 18-25 años"
+                  />
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Destino*</label>
-                    <select name="destino_id" value={formData.destino_id} onChange={handleInputChange} required>
-                      <option value="">Seleccionar destino</option>
-                      {store.destinos.map((destino) => (
-                        <option key={destino.idDestino} value={destino.idDestino}>
-                          {destino.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="admin-form-group">
+                  <label>Destino*</label>
+                  <select name="destino_id" value={formData.destino_id} onChange={handleInputChange} required>
+                    <option value="">Seleccionar destino</option>
+                    {store.destinos.map((destino) => (
+                      <option key={destino.idDestino} value={destino.idDestino}>
+                        {destino.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                  <div className="admin-form-group">
-                    <label>Idioma*</label>
-                    <select name="idioma_id" value={formData.idioma_id} onChange={handleInputChange} required>
-                      <option value="">Seleccionar idioma</option>
-                      {store.idiomas.map((idioma) => (
-                        <option key={idioma.idIdioma} value={idioma.idIdioma}>
-                          {idioma.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="admin-form-group">
+                  <label>Idioma*</label>
+                  <select name="idioma_id" value={formData.idioma_id} onChange={handleInputChange} required>
+                    <option value="">Seleccionar idioma</option>
+                    {store.idiomas.map((idioma) => (
+                      <option key={idioma.idIdioma} value={idioma.idIdioma}>
+                        {idioma.nombre}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -389,16 +414,15 @@ const AdminCursos = () => {
                 <h3>Servicios Incluidos</h3>
                 <div className="admin-servicios-grid">
                   {store.servicios.map((servicio) => (
-                    <div key={servicio.idServicio} className="admin-servicio-checkbox">
+                    <label key={servicio.idServicio} className="admin-servicio-checkbox">
                       <input
                         type="checkbox"
-                        id={`servicio-${servicio.idServicio}`}
                         value={servicio.idServicio}
                         checked={formData.servicios.includes(servicio.idServicio)}
                         onChange={handleServicioChange}
                       />
-                      <label htmlFor={`servicio-${servicio.idServicio}`}>{servicio.nombre}</label>
-                    </div>
+                      <span>{servicio.nombre}</span>
+                    </label>
                   ))}
                 </div>
               </div>
@@ -438,7 +462,7 @@ const AdminCursos = () => {
                   ) : (
                     <>
                       <i className={`fas ${isEditing ? "fa-save" : "fa-plus"}`}></i>
-                      <span>{isEditing ? "Actualizar Curso" : "Crear Curso"}</span>
+                      <span>{isEditing ? "Actualizar" : "Crear Curso"}</span>
                     </>
                   )}
                 </button>

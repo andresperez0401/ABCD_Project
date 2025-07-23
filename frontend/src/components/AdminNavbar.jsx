@@ -6,7 +6,7 @@ import { useContext } from "react"
 import "../styles/AdminNavbar.css"
 
 const AdminNavbar = () => {
-  const { actions } = useContext(Context)
+  const { store, actions } = useContext(Context)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -19,12 +19,27 @@ const AdminNavbar = () => {
     navigate("/")
   }
 
+  // Obtener inicial del email del usuario
+  const getUserInitial = () => {
+    if (store.user && store.user.email) {
+      return store.user.email.charAt(0).toUpperCase()
+    }
+    return "A" // Fallback
+  }
+
+  const getUserName = () => {
+    if (store.user && store.user.email) {
+      return store.user.email.split("@")[0]
+    }
+    return "Admin"
+  }
+
   return (
     <nav className="admin-navbar-container">
       <div className="admin-navbar-logo">
         <Link to="/admin" className="admin-logo-link">
           <div className="admin-logo-icon">
-            <i className="fas fa-globe-americas"></i>
+            <i className="fas fa-graduation-cap"></i>
           </div>
           <span className="admin-logo-text">ABCD Admin</span>
         </Link>
@@ -44,9 +59,9 @@ const AdminNavbar = () => {
       <div className="admin-navbar-user">
         <div className="admin-user-info">
           <div className="admin-user-avatar">
-            <i className="fas fa-user-circle"></i>
+            <span>{getUserInitial()}</span>
           </div>
-          <span className="admin-user-name">Admin</span>
+          <span className="admin-user-name">{getUserName()}</span>
         </div>
         <button className="admin-logout-btn" onClick={onLogout}>
           <i className="fas fa-sign-out-alt"></i>
