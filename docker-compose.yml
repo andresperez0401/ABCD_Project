@@ -1,0 +1,93 @@
+# version: "3.8"
+# services:
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     env_file:
+#       - ./backend/.env        # define FLASK_APP, DATABASE_URL, JWT_SECRET...
+#     volumes:
+#       - ./backend/sqlite:/app/sqlite   # si usas SQLite local
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - db   # si agregas un servicio de Postgres más abajo
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "80:80"
+
+#   # Opcional: si usas Postgres en contenedor
+#   db:
+#     image: postgres:15-alpine
+#     restart: always
+#     env_file:
+#       - ./backend/.env    # aquí define DATABASE_URL apuntando a postgres://postgres:pwd@db:5432/...
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+# volumes:
+#   pgdata:
+
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    # Montamos tu código para hot-reload, pero preservamos node_modules dentro del contenedor:
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    env_file:
+      - ./frontend/.env 
+    # Usamos dev en lugar de start para arrancar Vite en modo desarrollo
+    command: ["npm", "run", "dev"]
+    # environment:
+    #   - VITE_BACKEND_URL=http://backend:5000
+
+
+
+
+
+
+
+
+
+
+# version: '3.8'
+# services:
+#   backend:
+#     build:
+#       context: ./backend
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - ./backend:/app
+#     environment:
+#       - FLASK_ENV=development # si estás usando Flask
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#     ports:
+#       - "3000:3000"
+#     volumes:
+#       - ./frontend:/app
+

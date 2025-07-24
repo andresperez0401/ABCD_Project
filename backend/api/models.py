@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Integer, ForeignKey, Float, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date, time
+from datetime import date, time, datetime
 import uuid
 
 db = SQLAlchemy()
@@ -40,6 +40,8 @@ class Cliente(db.Model):
     telefono: Mapped[str] = mapped_column(String(20), nullable=False)
     interes: Mapped[str] = mapped_column(String(255), nullable=False)
     estado: Mapped[str] = mapped_column(String(50), nullable=True)
+    fecha_registro: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)  # Nuevo campo
+
 
     def serialize(self):
         return {
@@ -48,8 +50,9 @@ class Cliente(db.Model):
             'email': self.email,
             'telefono': self.telefono,
             'interes': self.interes, 
-            'estado': self.estado
-        }
+            'estado': self.estado,
+            'fecha_registro': self.fecha_registro.isoformat() if self.fecha_registro else None
+         }
 
 # ---------------------------- Destino -----------------------------
 class Destino(db.Model):

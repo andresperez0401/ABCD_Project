@@ -18,11 +18,17 @@ from api.routes.ciudad import ciudad_bp
 from api.routes.idioma import idioma_bp
 from api.routes.curso import curso_bp
 from api.routes.servicio import servicio_bp
+from api.routes.testimonio import testimonio_bp
 
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, 
+     resources={r"/*": {"origins": "*"}},
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "PUT", "DELETE"]
+)
 
 # Configuración de la base de datos
 base_dir = os.path.dirname(os.path.realpath(__file__))
@@ -49,6 +55,7 @@ app.register_blueprint(ciudad_bp, url_prefix='/ciudad')
 app.register_blueprint(idioma_bp, url_prefix='/idioma')
 app.register_blueprint(curso_bp, url_prefix='/curso')
 app.register_blueprint(servicio_bp, url_prefix='/servicio')
+app.register_blueprint(testimonio_bp, url_prefix='/testimonio')
 
 # Ruta base
 @app.route('/')
@@ -56,4 +63,4 @@ def index():
     return jsonify({"mensaje": "Bienvenido a la API de ABCD"})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=8080)

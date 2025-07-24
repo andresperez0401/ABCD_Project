@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, request, jsonify
 from api.models import db, Cliente
 from flask_jwt_extended import jwt_required
@@ -54,7 +55,8 @@ def create_cliente():
         email=data.get('email'),
         telefono=data.get('telefono'),
         interes=data.get('interes', ''),
-        estado = 'Registrado'  # Estado por defecto
+        estado='Registrado',
+        fecha_registro=datetime.utcnow()
     )
 
     # Agregar a la base de datos y confirmar
@@ -69,11 +71,30 @@ def update_cliente(id):
     cliente = Cliente.query.get(id)
     if not cliente:
         return jsonify({"error": "Cliente no encontrado"}), 404
+    
     data = request.get_json()
-    cliente.nombre = data.get('nombre', cliente.nombre)
-    cliente.email = data.get('email', cliente.email)
-    cliente.telefono = data.get('telefono', cliente.telefono)
-    cliente.interes = data.get('interes', cliente.interes)
+    
+    # Actualizar solo los campos permitidos
+    if 'estado' in data:
+        cliente.estado = data['estado']
+    
+    if 'nombre' in data:
+        cliente.nombre = data['nombre']
+    
+    if 'email' in data:
+        # Verificar si el nuevo email ya existe
+        if data['email'] != cliente.email:
+            existing = Cliente.query.filter_by(email=data['email']).first()
+            if existing:
+                return jsonify({"error": "El email ya está registrado"}), 400
+        cliente.email = data['email']
+    
+    if 'telefono' in data:
+        cliente.telefono = data['telefono']
+    
+    if 'interes' in data:
+        cliente.interes = data['interes']
+    
     db.session.commit()
     return jsonify(cliente.serialize()), 200
 
