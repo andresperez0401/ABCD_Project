@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import injectContext from "./store/appContext.jsx";
 import Navbar from './components/Navbar.jsx';
 import StartPage from './components/StartPage.jsx';
-import WhatsAppButton from "./components/WhatsappButton.jsx";
+import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import ContactPage from './components/ContactPage.jsx';
 import Footer from './components/Footer.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
