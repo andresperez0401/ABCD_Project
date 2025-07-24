@@ -1,4 +1,4 @@
---Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_servicio
+--Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_servicio -> Testimonio
 
 -- Ciudades para Canadá (ID destino = 1)
 INSERT INTO ciudad (nombre, descripcion, destino_id, imageUrl) 
