@@ -25,7 +25,7 @@
 .logo-container {
   width: 70px;
   height: 70px;
-  background: #27ae60;
+  background: #9CBE30;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@
   left: 0;
   width: 30px;
   height: 2px;
-  background: #27ae60;
+  background: #9CBE30;
 }
 
 .link-group a {
@@ -121,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #27ae60;
+  color: #9CBE30;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;

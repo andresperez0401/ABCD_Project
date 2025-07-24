@@ -42,7 +42,8 @@
   margin-bottom: 60px;
   border-radius: 0 0 30px 30px;
   overflow: hidden;
-  background:  linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background-color: #93BF21;
+
 }
 
 .courses-hero-overlay {
@@ -393,7 +394,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background:  linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background:  linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);
   color: var(--courses-white);
   font-size: 3rem;
 }
@@ -447,7 +448,7 @@
 }
 
 .courses-service-tag {
-  background: var(--courses-success);
+  background: #9CBE30;
   color: var(--courses-white);
   padding: 0.25rem 0.5rem;
   border-radius: 50px;
@@ -456,7 +457,7 @@
 }
 
 .courses-more-services {
-  background: var(--courses-gray-200);
+  background: #9CBE30;
   color: var(--courses-gray-700);
   padding: 0.25rem 0.5rem;
   border-radius: 50px;
@@ -513,7 +514,7 @@
 
 /* CTA Section - Estilo Destinos/Servicios */
 .courses-cta {
-  background:  linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background:  linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);
   border-radius: 20px;
   padding: 80px 40px;
   text-align: center;
@@ -757,7 +758,7 @@
 }
 
 .courses-whatsapp-btn {
-  background: #25d366;
+  background: #9CBE30;
   color: var(--courses-white);
   border: none;
   padding: 1rem 2rem;

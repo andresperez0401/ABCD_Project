@@ -35,7 +35,8 @@
   margin-bottom: 60px;
   border-radius: 0 0 20px 20px;
   overflow: hidden;
-  background: linear-gradient(to left, #ffffff, #00ff00);
+  background-color: #93BF21;
+
 }
 
 .hero-overlay {
@@ -44,7 +45,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: none;
   z-index: 1;
 }
 
@@ -237,7 +238,7 @@
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 8px;
-  color: var(--primary-color);
+  color: #022760;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
@@ -318,7 +319,7 @@
 
 /* CTA Section */
 .servicios-cta {
-  background: linear-gradient(to left, #ffffff, #4bd131);
+  background: linear-gradient(to left, #000000, #022760);
   border-radius: 20px;
   padding: 60px 40px;
   text-align: center;
@@ -329,7 +330,7 @@
 .cta-content h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .cta-content p {
@@ -337,7 +338,7 @@
   max-width: 700px;
   margin: 0 auto 30px;
   opacity: 0.9;
-  color: black;
+  color: rgb(251, 250, 250);
 }
 
 .cta-button {

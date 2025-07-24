@@ -56,7 +56,7 @@
 .card-image-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background: linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,7 +71,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background: linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +120,7 @@
 }
 
 .card-location {
-  color: #ff6f00;
+  color: #677c1f;
   font-weight: 600;
   margin-bottom: 1rem;
   display: flex;
@@ -159,7 +159,7 @@
 }
 
 .card-info-item svg {
-  color: #a2e794;
+  color: #9CBE30;
   font-size: 0.9rem;
 }
 
@@ -172,7 +172,7 @@
 }
 
 .service-tag {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #171715, #9CBE30);
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 50px;
@@ -193,7 +193,7 @@
 .card-btn {
   background: white;
   color: rgb(3, 3, 3);
-  border: 1px solid rgb(47, 160, 25);
+  border: 1px solid #9CBE30;
   padding: 0.8rem 1.5rem;
   border-radius: 50px;
   cursor: pointer;
@@ -208,7 +208,7 @@
 }
 
 .card-btn:hover {
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);;
+  background: linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
@@ -220,7 +220,7 @@
   transform: translateY(-50%);
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);;
+  background: linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);;
   border: none;
   border-radius: 50%;
   color: white;
@@ -239,7 +239,7 @@
 }
 
 .carousel-button:hover {
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);;
+  background: linear-gradient(135deg, #e6e6e7 0%, #9CBE30 100%);;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -275,7 +275,7 @@
 }
 
 .dot:hover {
-  background: #a2e794;
+  background: #9CBE30;
 }
 
 /* Responsive mejorado */

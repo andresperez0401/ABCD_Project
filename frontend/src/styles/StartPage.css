@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to left, #ffffff, #a2e794);
+  background:  #9CBE30;
   min-height: 100vh;
 }
 
@@ -16,6 +16,7 @@
 .globe-section {
   display: flex;
   flex-direction: row;
+  background: linear-gradient(to left, #ffffff, #9CBE30);
   align-items: center;
   justify-content: center;
   gap: 6rem;
@@ -94,7 +95,7 @@
 /* ======================================================= */
 .courses-section {
   width: 100%;
-  background: linear-gradient(to left, #ffffff, #a2e794);
+  background:   #9CBE30;
   padding: 4rem 1rem;
   padding-bottom: 3rem;
   box-sizing: border-box;

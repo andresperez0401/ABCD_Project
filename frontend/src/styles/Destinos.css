@@ -36,7 +36,8 @@
   margin-bottom: 60px;
   border-radius: 0 0 30px 30px;
   overflow: hidden;
-  background: linear-gradient(135deg, #e6e6e7 0%, #25d42e 100%);
+  background-color: #93BF21;
+
 }
 
 .hero-overlay {
@@ -350,7 +351,7 @@
 
 /* CTA Section */
 .destinos-cta {
-  background: linear-gradient(135deg, #fcfcfc 0%, #50d41c 100%);
+  background: linear-gradient(135deg, #fcfcfc 0%, #9CBE30 100%);
   border-radius: 20px;
   padding: 80px 40px;
   text-align: center;

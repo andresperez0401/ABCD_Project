@@ -1,72 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import '../styles/Navbar.css';
-import logo from "../images/abcd.jpg";
+"use client"
+
+import { useState, useEffect } from "react"
+import { NavLink } from "react-router-dom"
+import "../styles/Navbar.css"
+import logo from "../images/abcd.jpg"
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      setScrolled(window.scrollY > 20)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   useEffect(() => {
-    setOpen(false);
-  }, []);
+    setOpen(false)
+  }, [])
 
   const navLinks = [
-    { to: '/', label: 'Inicio' },
-    { to: '/servicios', label: 'Servicios' },
-    { to: '/cursos', label: 'Cursos' },
-    { to: '/destinos', label: 'Destinos' },
-    { to: '/contacto', label: 'Contacto' }
-  ];
+    { to: "/", label: "Inicio" },
+    { to: "/servicios", label: "Servicios" },
+    { to: "/cursos", label: "Cursos" },
+    { to: "/destinos", label: "Destinos" },
+    { to: "/contacto", label: "Contacto" },
+  ]
 
   return (
-    <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
+    <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}>
       <div className="nav-container">
-        <div className="nav-brand">
-          <NavLink to="/" className="nav-logo-link">
-            <img src={logo} alt="ABCD Languages" className="nav-logo" />
-          </NavLink>
-          <span className="nav-title">ABCD Languages</span> {/* 🔥 EL TÍTULO AQUÍ */}
+        {/* Sección izquierda - Logo y título */}
+        <div className="nav-left">
+          <div className="nav-brand">
+            <NavLink to="/" className="nav-logo-link">
+              <img src={logo || "/placeholder.svg"} alt="ABCD Languages" className="nav-logo" />
+            </NavLink>
+            <span className="nav-title">ABCD Languages</span>
+          </div>
         </div>
 
-        <button 
-          className={`nav-toggle ${open ? 'open' : ''}`}
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle navigation"
-        >
-          <span className="nav-toggle-line"></span>
-          <span className="nav-toggle-line"></span>
-          <span className="nav-toggle-line"></span>
-        </button>
+        {/* Sección central - Links de navegación */}
+        <div className="nav-center">
+          <nav className={`nav-menu ${open ? "open" : ""}`}>
+            <ul className="nav-list">
+              {navLinks.map((link) => (
+                <li key={link.to} className="nav-item">
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
 
-        <nav className={`nav-menu ${open ? 'open' : ''}`}>
-          <ul className="nav-list">
-            {navLinks.map((link) => (
-              <li key={link.to} className="nav-item">
-                <NavLink 
-                  to={link.to} 
-                  className={({isActive}) => 
-                    `nav-link ${isActive ? 'active' : ''}`
-                  }
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {/* Sección derecha - Toggle button */}
+        <div className="nav-right">
+          <button
+            className={`nav-toggle ${open ? "open" : ""}`}
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle navigation"
+          >
+            <span className="nav-toggle-line"></span>
+            <span className="nav-toggle-line"></span>
+            <span className="nav-toggle-line"></span>
+          </button>
+        </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

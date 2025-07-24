@@ -1,7 +1,4 @@
 /* ================= Variables ================= */
-
-
-
 :root {
   --nav-height: 80px;
   --nav-height-mobile: 70px;
@@ -10,11 +7,11 @@
   --nav-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --nav-border: rgba(0, 0, 0, 0.05);
   --text-color: #090a0a;
-  --text-hover: #27ae60;
-  --text-active: #27ae60;
+  --text-hover: #9cbe30;
+  --text-active: #9cbe30;
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --easing: cubic-bezier(0.23, 1, 0.32, 1);
-  --font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif;
+  --font-family: "Montserrat", "Segoe UI", Roboto, sans-serif;
 }
 
 /* ================= Base Styles ================= */
@@ -23,6 +20,7 @@
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
   color: black;
   height: var(--nav-height);
   background: var(--nav-bg);
@@ -41,12 +39,34 @@
 
 .nav-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: 100%;
   max-width: 1200px;
   height: 100%;
   margin: 0 auto;
   padding: 0 2rem;
+  gap: 10rem;
+}
+
+/* ================= Secciones del Navbar ================= */
+.nav-left {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /* ================= Brand/Logo ================= */
@@ -64,13 +84,6 @@
   color: #090a0a;
   white-space: nowrap;
 }
-
-@media (max-width: 600px) {
-  .nav-title {
-    display: none;
-  }
-}
-
 
 .nav-logo {
   height: 70px;
@@ -120,7 +133,7 @@
 }
 
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -136,7 +149,7 @@
 }
 
 .nav-link.active {
-   color: #27ae60 !important;
+  color: #9cbe30 !important;
   font-weight: 600;
 }
 
@@ -171,19 +184,29 @@
   .nav {
     height: var(--nav-height-mobile);
   }
-  
+
   .nav-scrolled {
     height: var(--nav-height-mobile);
   }
-  
+
   .nav-container {
     padding: 0 1.5rem;
   }
-  
+
   .nav-toggle {
     display: block;
   }
-  
+
+  .nav-center {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    justify-content: center;
+    pointer-events: none;
+  }
+
   .nav-menu {
     position: fixed;
     top: var(--nav-height-mobile);
@@ -202,27 +225,28 @@
     backdrop-filter: blur(10px);
     z-index: 1000;
     overflow-y: auto;
+    pointer-events: all;
   }
-  
+
   .nav-menu.open {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
   }
-  
+
   .nav-list {
     flex-direction: column;
     height: auto;
     width: 100%;
     padding: 2rem 0;
   }
-  
+
   .nav-item {
     margin: 0.8rem 0;
     width: 100%;
     justify-content: center;
   }
-  
+
   .nav-link {
     padding: 1rem 2rem;
     font-size: 1.2rem;
@@ -230,23 +254,29 @@
     text-align: center;
     width: 100%;
   }
-  
+
   .nav-link:hover::after,
   .nav-link.active::after {
     width: 30%;
   }
-  
+
   /* Hamburger animation */
   .nav-toggle.open .nav-toggle-line:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
   }
-  
+
   .nav-toggle.open .nav-toggle-line:nth-child(2) {
     opacity: 0;
   }
-  
+
   .nav-toggle.open .nav-toggle-line:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-title {
+    display: none;
   }
 }
 

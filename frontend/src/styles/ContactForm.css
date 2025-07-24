@@ -29,7 +29,7 @@
 
 .icon {
   font-size: 18px;
-  color: #27ae60;
+  color: #9CBE30;
 }
 
 .form-group input,
@@ -53,7 +53,7 @@
 .form-group input:focus,
 .form-group textarea:focus,
 .phone-input:focus-within {
-  border-color: #27ae60;
+  border-color: #9CBE30;
   background: white;
   outline: none;
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
@@ -74,7 +74,7 @@
 }
 
 .phone-input > input:focus {
-  border-color: #27ae60 !important;
+  border-color: #9CBE30 !important;
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1) !important;
 }
 
@@ -87,7 +87,7 @@
 }
 
 .submit-btn {
-  background: #27ae60;
+  background: #9CBE30;
   color: white;
   border: none;
   padding: 16px;
@@ -180,7 +180,7 @@
 }
 
 .phone-input-element:focus {
-  border-color: #27ae60 !important;
+  border-color: #9CBE30 !important;
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1) !important;
   background: white !important;
   outline: none !important;
@@ -204,7 +204,7 @@
 }
 
 .interests-container textarea:focus {
-  border-color: #27ae60;
+  border-color: #9CBE30;
   background: white;
   outline: none;
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);

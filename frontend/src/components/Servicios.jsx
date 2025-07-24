@@ -80,10 +80,10 @@ const Servicios = () => {
 
   // Estilos para las categorías
   const categoryStyles = {
-    alojamiento: { background: 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)' },
-    academico: { background: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)' },
-    transporte: { background: 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)' },
-    otros: { background: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)' }
+    alojamiento: { background: 'linear-gradient(135deg, #9CBE30 0%, #a6c1ee 100%)' },
+    academico: { background: 'linear-gradient(135deg, #a6c1ee 0%, #9CBE30 100%)' },
+    transporte: { background: 'linear-gradient(135deg, #9CBE30 0%, #a6c1ee 100%)' },
+    otros: { background: 'linear-gradient(135deg, #a6c1ee 0%, #9CBE30 100%)' }
   };
 
   return (
