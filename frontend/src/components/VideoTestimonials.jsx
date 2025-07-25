@@ -68,6 +68,26 @@ const VideoTestimonials = () => {
     else if (diff < -50) goPrev();
   };
 
+
+  const getEmbedUrl = (url) => {
+    // Manejar URLs con parámetros
+    const baseUrl = url.split('?')[0]; 
+    
+    // Convertir formato corto (youtu.be) a embed
+    if (baseUrl.includes('youtu.be')) {
+      const videoId = baseUrl.split('/').pop();
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // Convertir formato clásico (watch?v=) a embed
+    if (baseUrl.includes('watch?v=')) {
+      const videoId = baseUrl.split('v=')[1];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    return baseUrl; // Por si ya es formato embed
+  };
+
   return (
     <section className="video-section">
       <h2 className="video-title">Testimonios de nuestros estudiantes</h2>
@@ -97,10 +117,7 @@ const VideoTestimonials = () => {
               >
                 <div className="video-container">
                   <iframe
-                    src={testimonial.videoUrl
-                      .split('?')[0] // <-- ¡Esto corta el ?feature=shared!
-                      .replace('https://youtu.be/', 'https://www.youtube.com/embed/')
-                      .replace('watch?v=', 'embed/')}
+                    src={getEmbedUrl(testimonial.videoUrl)}
                     title={`Testimonio de ${testimonial.nombre}`}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
