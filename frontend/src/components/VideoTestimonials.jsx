@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import ReactPlayer from "react-player/youtube"; // npm i react-player si no tienes
+import ReactPlayer from "react-player"; // npm i react-player si no tienes
 import "../styles/VideoTestimonials.css";
 import { Context } from "../store/appContext";
 
