@@ -43,26 +43,29 @@ const VideoTestimonials = () => {
   const getYoutubeUrl = (url) => {
     if (!url) return "";
 
-    let videoId = null;
-
-    // Si es youtu.be corto el ID
+    // Si es youtu.be
     if (url.includes("youtu.be")) {
-      videoId = url.split("/").pop().split("?")[0];
+      // Divide en "/" y toma el último trozo, luego corta todo lo que venga después de "?"
+      const id = url.split("/").pop().split("?")[0];
+      return `https://www.youtube.com/watch?v=${id}`;
     }
 
-    // Si es youtube.com watch?v=
-    else if (url.includes("youtube.com/watch")) {
-      const urlObj = new URL(url);
-      videoId = urlObj.searchParams.get("v");
+    // Si es youtube.com/watch
+    if (url.includes("youtube.com/watch")) {
+      try {
+        const urlObj = new URL(url);
+        const id = urlObj.searchParams.get("v");
+        return id ? `https://www.youtube.com/watch?v=${id}` : url;
+      } catch (e) {
+        // Si la URL está mal, devolvemos el original
+        return url;
+      }
     }
 
-    if (videoId) {
-      return `https://www.youtube.com/watch?v=${videoId}`;
-    }
-
-    // Si no es youtube, devuelve la url normal (para otros videos o errores)
+    // Para cualquier otro tipo de URL
     return url;
   };
+
 
   return (
     <section className="video-section">
