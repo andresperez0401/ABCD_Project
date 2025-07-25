@@ -3,6 +3,38 @@ const getState = ({ getStore, getActions, setStore }) => {
     store: {
       token: localStorage.getItem("token") || null,
       userEmail: localStorage.getItem("userEmail") || null,
+      
+      
+      testimoniosData : [
+        {
+          idTestimonio: 1,
+          mensaje: 'Ellos me cumplieron el sueño de venir a Canadá a estudiar inglés',
+          nombre: 'Joanmari Vega',
+          videoUrl: 'https://youtu.be/IiRKll13wDg?feature=shared',
+        },
+        {
+          idTestimonio: 2,
+          mensaje: 'Me acompañaron en todo el proceso de mi visa y mi curso de inglés desde el primer día',
+          nombre: 'Mirasi Álvarez',
+          videoUrl: 'https://youtu.be/273fi1iyZFY?feature=shared',
+        },
+        {
+          idTestimonio: 3,
+          mensaje: 'Me atendieron de la mejor manera desde el principio',
+          nombre: 'Wilfredo Herrera',
+          videoUrl: 'https://youtu.be/fn8a1LKh32c?feature=shared',
+        },
+        {
+          idTestimonio: 4,
+          mensaje: 'Estoy super agradecida con el trato y responsabilidad que me dieron en ABCD Languages',
+          nombre: 'Rina Moncayo',
+          videoUrl: 'https://youtu.be/KUh-i7NWwyA?feature=shared',
+        }
+      ],       
+          
+      
+      
+      
       // Datos estáticos para la UI
       SELECTED_COUNTRIES: [
         "Australia",

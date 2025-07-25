@@ -11,10 +11,10 @@ const VideoTestimonials = () => {
   const [touchStart, setTouchStart] = useState(0);
 
   useEffect(() => {
-    actions.getTestimonios();
+    // actions.getTestimonios();
   }, []);
 
-  const testimonials = store.testimonios || [];
+  const testimonials = store.testimoniosData || [];
 
   const goNext = () => {
     setCurrentIndex(prev =>
