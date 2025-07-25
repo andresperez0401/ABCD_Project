@@ -98,9 +98,8 @@ const VideoTestimonials = () => {
                 <div className="video-container">
                   <iframe
                     src={testimonial.videoUrl
-                      // Si es youtu.be/<id>
+                      .split('?')[0] // <-- ¡Esto corta el ?feature=shared!
                       .replace('https://youtu.be/', 'https://www.youtube.com/embed/')
-                      // Si es youtube.com/watch?v=<id>
                       .replace('watch?v=', 'embed/')}
                     title={`Testimonio de ${testimonial.nombre}`}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
