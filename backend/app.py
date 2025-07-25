@@ -23,8 +23,17 @@ from api.routes.testimonio import testimonio_bp
 load_dotenv()
 
 app = Flask(__name__)
+
+origins = [
+    "http://localhost:3000",
+    "http://abcdlanguages.com",
+    "https://abcdlanguages.com",
+    "http://www.abcdlanguages.com",
+    "https://www.abcdlanguages.com"
+]
+
 CORS(app, 
-     resources={r"/*": {"origins": ["http://abcdlanguages.com", "http://localhost:3000"]}},
+     resources={r"/*": {"origins": origins}},
      supports_credentials=True,
      allow_headers=["Content-Type", "Authorization"],
      methods=["GET", "POST", "PUT", "DELETE"]
