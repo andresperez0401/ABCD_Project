@@ -42,12 +42,26 @@ const VideoTestimonials = () => {
 
   const getYoutubeUrl = (url) => {
     if (!url) return "";
-    const baseUrl = url.split("?")[0];
-    if (baseUrl.includes("youtu.be")) {
-      const videoId = baseUrl.split("/").pop();
+
+    let videoId = null;
+
+    // Si es youtu.be corto el ID
+    if (url.includes("youtu.be")) {
+      videoId = url.split("/").pop().split("?")[0];
+    }
+
+    // Si es youtube.com watch?v=
+    else if (url.includes("youtube.com/watch")) {
+      const urlObj = new URL(url);
+      videoId = urlObj.searchParams.get("v");
+    }
+
+    if (videoId) {
       return `https://www.youtube.com/watch?v=${videoId}`;
     }
-    return baseUrl;
+
+    // Si no es youtube, devuelve la url normal (para otros videos o errores)
+    return url;
   };
 
   return (
