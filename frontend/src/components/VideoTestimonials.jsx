@@ -1,35 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import ReactPlayer from "react-player/youtube"; // npm i react-player si no tienes
 import "../styles/VideoTestimonials.css";
-import { useContext } from "react";
-import{ Context } from "../store/appContext";
-
-// const testimonials = [
-//   {
-//     name: "María Pérez",
-//     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-//     country: "España",
-//     course: "Inglés Intensivo"
-//   },
-//   {
-//     name: "Juan Sánchez",
-//     videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U",
-//     country: "Francia",
-//     course: "Francés Avanzado"
-//   },
-//   {
-//     name: "Luisa Gómez",
-//     videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0",
-//     country: "Alemania",
-//     course: "Alemán para Negocios"
-//   },
-//   {
-//     name: "Carlos Rodríguez",
-//     videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw",
-//     country: "Italia",
-//     course: "Italiano Cultural"
-//   },
-// ];
+import { Context } from "../store/appContext";
 
 const VideoTestimonials = () => {
   const { store, actions } = useContext(Context);
@@ -41,21 +14,20 @@ const VideoTestimonials = () => {
     actions.getTestimonios();
   }, []);
 
-  const testimonials = store.testimonios;
+  const testimonials = store.testimonios || [];
 
   const goNext = () => {
-    setCurrentIndex(prev => 
+    setCurrentIndex(prev =>
       prev === testimonials.length - 1 ? 0 : prev + 1
     );
   };
 
   const goPrev = () => {
-    setCurrentIndex(prev => 
+    setCurrentIndex(prev =>
       prev === 0 ? testimonials.length - 1 : prev - 1
     );
   };
 
-  // Manejar gestos táctiles
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientX);
   };
@@ -63,64 +35,55 @@ const VideoTestimonials = () => {
   const handleTouchEnd = (e) => {
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart - touchEnd;
-    
+
     if (diff > 50) goNext();
     else if (diff < -50) goPrev();
   };
 
-
-  const getEmbedUrl = (url) => {
-    // Manejar URLs con parámetros
-    const baseUrl = url.split('?')[0]; 
-    
-    // Convertir formato corto (youtu.be) a embed
-    if (baseUrl.includes('youtu.be')) {
-      const videoId = baseUrl.split('/').pop();
-      return `https://www.youtube.com/embed/${videoId}`;
+  const getYoutubeUrl = (url) => {
+    if (!url) return "";
+    const baseUrl = url.split("?")[0];
+    if (baseUrl.includes("youtu.be")) {
+      const videoId = baseUrl.split("/").pop();
+      return `https://www.youtube.com/watch?v=${videoId}`;
     }
-    
-    // Convertir formato clásico (watch?v=) a embed
-    if (baseUrl.includes('watch?v=')) {
-      const videoId = baseUrl.split('v=')[1];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    
-    return baseUrl; // Por si ya es formato embed
+    return baseUrl;
   };
 
   return (
     <section className="video-section">
       <h2 className="video-title">Testimonios de nuestros estudiantes</h2>
       <p className="video-subtitle">Descubre experiencias reales de nuestros alumnos alrededor del mundo</p>
-      
-      <div 
+
+      <div
         className="carousel-container"
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <button 
-          className={`carousel-button prev ${isHovering ? 'visible' : ''}`} 
+        <button
+          className={`carousel-button prev ${isHovering ? "visible" : ""}`}
           onClick={goPrev}
           aria-label="Testimonio anterior"
         >
           <FiChevronLeft size={28} />
         </button>
-        
+
         <div className="carousel-track">
           <div className="carousel-slides">
             {testimonials.map((testimonial, index) => (
-              <div 
-                key={testimonial.idTestimonio} 
-                className={`video-slide ${index === currentIndex ? 'active' : ''}`}
+              <div
+                key={testimonial.idTestimonio}
+                className={`video-slide ${index === currentIndex ? "active" : ""}`}
               >
                 <div className="video-container">
-                  <iframe
-                    src={getEmbedUrl(testimonial.videoUrl)}
-                    title={`Testimonio de ${testimonial.nombre}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                  <ReactPlayer
+                    url={getYoutubeUrl(testimonial.videoUrl)}
+                    width="100%"
+                    height="100%"
+                    controls
+                    playing={index === currentIndex}
                   />
                 </div>
                 <div className="testimonial-info">
@@ -131,21 +94,21 @@ const VideoTestimonials = () => {
             ))}
           </div>
         </div>
-        
-        <button 
-          className={`carousel-button next ${isHovering ? 'visible' : ''}`} 
+
+        <button
+          className={`carousel-button next ${isHovering ? "visible" : ""}`}
           onClick={goNext}
           aria-label="Siguiente testimonio"
         >
           <FiChevronRight size={28} />
         </button>
       </div>
-      
+
       <div className="carousel-dots">
         {testimonials.map((_, index) => (
           <button
             key={index}
-            className={`dot ${index === currentIndex ? 'active' : ''}`}
+            className={`dot ${index === currentIndex ? "active" : ""}`}
             onClick={() => setCurrentIndex(index)}
             aria-label={`Ir a testimonio ${index + 1}`}
           />
