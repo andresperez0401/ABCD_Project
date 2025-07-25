@@ -1,0 +1,23 @@
+#Para conectarse a la bd conetenreizada
+psql -h localhost -p 5433 -U abcd_user -d abcdatabase
+
+#Subir un contenedor y construirlo
+docker compose up --build
+
+#Bajar un contenedor 
+docker compose down
+
+#Remover el volumen de la base de datos
+docker volume rm abcd_project_postgres_data
+   
+#Remover todos los volumenes
+docker volume prune -f
+   
+#Ver volumenes activos
+docker volume ls
+
+#Conectarse a la bd por docker (Numero de contenedor despues de it)
+docker exec -it 2e3a5afa4254 psql -U abcd_user -d abcdatabase
+
+#Ver contenedores activos
+docker ps
