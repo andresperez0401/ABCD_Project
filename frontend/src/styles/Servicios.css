@@ -26,8 +26,10 @@
 }
 
 /* Hero Section */
+
 .servicios-hero {
   position: relative;
+  padding-top: 15px;
   height: 400px;
   display: flex;
   align-items: center;
@@ -394,6 +396,7 @@
 @media (max-width: 480px) {
   .servicios-hero {
     height: 250px;
+    padding-top: 100px;
   }
   
   .hero-content h1 {
