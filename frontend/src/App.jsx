@@ -22,6 +22,7 @@ import AdminCursos from './components/AdminCursos.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
+
 const AppContent = () => {
   const location = useLocation();
   const hideLayout = location.pathname === "/" ||
@@ -34,6 +35,7 @@ const AppContent = () => {
 
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/contacto" element={<ContactPage />} />
@@ -88,6 +90,7 @@ function App() {
   return (
     <div className="App">
         <Router>
+          <ScrollToTop />
           <AppContentWithFlux />
         </Router>
     </div>

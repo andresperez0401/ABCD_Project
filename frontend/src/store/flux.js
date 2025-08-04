@@ -57,7 +57,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         },
         {
           country: "England",
-          name: "Reino Unido",
+          name: "Inglaterra",
           description: "Cuna del idioma inglés con rica historia",
           imageUrl: "https://images.unsplash.com/photo-1543832923-44667a44c804?q=80&w=1044&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
@@ -69,7 +69,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         },
         {
           country: "USA",
-          name: "Estados Unidos",
+          name: "Usa",
           description: "País diverso con oportunidades educativas y culturales",
           imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },

@@ -457,9 +457,8 @@ const AdminCursos = () => {
                   <label>Nivel*</label>
                   <select name="nivel" value={formData.nivel} onChange={handleInputChange} required>
                     <option value="">Seleccionar nivel</option>
-                    <option value="Principiante">Principiante</option>
-                    <option value="Intermedio">Intermedio</option>
-                    <option value="Avanzado">Avanzado</option>
+                    <option value="Principiante/Intermedio/Avanzado">Principiante/Intermedio/Avanzado</option>
+                    <option value="Intermedio/Avanzado">Intermedio/Avanzado</option>
                   </select>
                 </div>
 
@@ -468,8 +467,12 @@ const AdminCursos = () => {
                   <select name="tipoCurso" value={formData.tipoCurso} onChange={handleInputChange} required>
                     <option value="">Seleccionar tipo</option>
                     <option value="General">General</option>
-                    <option value="Intensivo">Intensivo</option>
-                    <option value="Especializado">Especializado</option>
+                    <option value="Online">Online</option>
+                    <option value="Campamento de Verano">Campamento De Verano</option>
+                    <option value="Examenes de Cambridge">Examenes de Cambridge</option>
+                    <option value="Estudio y Trabajo">Estudio y Trabajo</option>
+                    <option value="+50">+50</option>
+                    <option value="Negocios">Negocios</option>
                   </select>
                 </div>
 

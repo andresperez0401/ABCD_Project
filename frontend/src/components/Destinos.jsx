@@ -137,6 +137,10 @@ const Destinos = () => {
                 <div 
                   key={destino.idDestino} 
                   className="destino-card"
+                  onClick={() => {
+                    navigate(`/cursos?destino=${encodeURIComponent(destino.nombre)}`);
+                    setSelected(null); // cerrar modal
+                  }}
                 //   onClick={() => handleViewDetails(destino.idDestino)}
                 >
                   {destino.imageUrl ? (

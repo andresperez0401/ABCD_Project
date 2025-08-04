@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import "../styles/Navbar.css"
 import logo from "../images/abcd.jpg"
 
@@ -24,9 +24,9 @@ const Navbar = () => {
 
   const navLinks = [
     { to: "/", label: "Inicio" },
-    { to: "/servicios", label: "Servicios" },
-    { to: "/cursos", label: "Cursos" },
     { to: "/destinos", label: "Destinos" },
+    { to: "/cursos", label: "Cursos" },
+    { to: "/servicios", label: "Servicios" },
     { to: "/contacto", label: "Contacto" },
   ]
 

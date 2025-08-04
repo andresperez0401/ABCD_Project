@@ -3,6 +3,7 @@ import { Context } from "../store/appContext.jsx";
 import Globe from "globe.gl";
 import * as THREE from 'three';
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import "../styles/GloboCursos.css";
 
 Modal.setAppElement("#root");
@@ -23,6 +24,9 @@ export default function GloboCursos() {
   const globeEl = useRef();
   const containerRef = useRef();
   const globeInstanceRef = useRef(null);
+
+  //Para navegar entre rutas
+  const navigate = useNavigate();
   
   // Estados
   const [world, setWorld] = useState([]);
@@ -283,6 +287,7 @@ export default function GloboCursos() {
               width: "100%",
               maxHeight: "90vh",
               overflow: "visible",
+              overflowY: "auto",
               boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
               color: "#222",
               fontSize: "1.1rem",
@@ -329,6 +334,24 @@ export default function GloboCursos() {
               />
             )}
             <p>{selected.description}</p>
+
+            <button
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#1a73e8",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate(`/cursos?destino=${encodeURIComponent(selected.name)}`);
+                setSelected(null); // cerrar modal
+              }}
+            >
+              Ver cursos
+            </button>
           </div>
         </Modal>
       )}

@@ -21,14 +21,14 @@ const Footer = () => {
         <div className="footer-links">
           <div className="link-group">
             <h4>Explorar</h4>
-            <Link to="/cursos"><FiBook className="link-icon" /> Cursos</Link>
-            <Link to="/destinos"><FiGlobe className="link-icon" /> Destinos</Link>
-            <Link to="/"> <FiHome className='link-icon' /> Home </Link>
+            <Link to="/cursos" onClick={() => window.scrollTo(0, 0)}><FiBook className="link-icon" /> Cursos</Link>
+            <Link to="/destinos" onClick={() => window.scrollTo(0, 0)}><FiGlobe className="link-icon" /> Destinos</Link>
+            <Link to="/" onClick={() => window.scrollTo(0, 0)}> <FiHome className='link-icon' /> Home </Link>
           </div>
           
           <div className="link-group">
             <h4>Empresa</h4>
-            <Link to="/contacto">Contacto</Link>
+            <Link to="/contacto" onClick={() => window.scrollTo(0, 0)}>Contacto</Link>
           </div>
         </div>
       </div>

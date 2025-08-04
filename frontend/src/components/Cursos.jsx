@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo, useCallback } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
 import "../styles/Cursos.css"
 import {
   FaSearch,
@@ -22,6 +23,8 @@ import Footer from "./Footer"
 // Modal Component
 const CourseModal = ({ course, isOpen, onClose }) => {
   if (!isOpen || !course) return null
+
+  const navigate = useNavigate();
 
   return (
     <div className="courses-modal-overlay" onClick={onClose}>
@@ -82,9 +85,9 @@ const CourseModal = ({ course, isOpen, onClose }) => {
             </div>
           </div>
 
-          <button className="courses-whatsapp-btn" onClick={() => window.open(`https://wa.me/584142677943`, "_blank")}>
-            <FaWhatsapp />
-            Contactar por WhatsApp
+          <button className="courses-whatsapp-btn" onClick={() => navigate('/contacto')/*window.open(`https://wa.me/584142677943`, "_blank")*/}>
+            {/* <FaWhatsapp /> */}
+            Contáctanos
           </button>
         </div>
       </div>
@@ -99,6 +102,13 @@ const Cursos = () => {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
+
+  //Para nevgación
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const destinoParam = queryParams.get("destino");
 
   // Paginación
   const [currentPage, setCurrentPage] = useState(1)
@@ -130,6 +140,13 @@ const Cursos = () => {
     }
     fetchCursos()
   }, [])
+
+  //Para obtener el destino en la ruta
+  useEffect(() => {
+    if (destinoParam) {
+      setFilters((prev) => ({ ...prev, destino: destinoParam }));
+    }
+  }, [destinoParam]);
 
   // Filter options
   const filterOptions = useMemo(
@@ -190,13 +207,13 @@ const Cursos = () => {
   const openModal = useCallback((course) => {
     setSelectedCourse(course)
     setIsModalOpen(true)
-    document.body.style.overflow = "hidden"
+  //  document.body.style.overflow = "hidden"
   }, [])
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false)
     setSelectedCourse(null)
-    document.body.style.overflow = "unset"
+//    document.body.style.overflow = "unset"
   }, [])
 
   const renderFilter = (label, name, options, icon) => (
@@ -291,7 +308,7 @@ const Cursos = () => {
           <div className="courses-spinner"></div>
           <p>Cargando cursos...</p>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     )
   }
@@ -360,7 +377,7 @@ const Cursos = () => {
               {renderFilter("Idioma", "idioma", filterOptions.idiomas, <FaLanguage />)}
               {renderFilter("Tipo", "tipoCurso", filterOptions.tiposCurso, <FaGraduationCap />)}
               {renderFilter("Nivel", "nivel", filterOptions.niveles, <FaChartLine />)}
-              {renderFilter("Edad", "edad", filterOptions.edades, <FaUserFriends />)}
+              {/* {renderFilter("Edad", "edad", filterOptions.edades, <FaUserFriends />)} */}
               {renderFilter("Destino", "destino", filterOptions.destinos, <FaMapMarkerAlt />)}
 
               <button className="courses-reset-btn" onClick={resetFilters}>
@@ -472,8 +489,8 @@ const Cursos = () => {
           <div className="courses-cta-content">
             <h2>¿Listo para tu próxima aventura?</h2>
             <p>Descubre cómo podemos ayudarte a encontrar el programa perfecto para aprender idiomas</p>
-            <button className="courses-cta-button" onClick={() => window.open(`https://wa.me/584142677943`, "_blank")}>
-              Contáctanos <i className="fas fa-paper-plane"></i>
+            <button className="courses-cta-button" onClick={() => navigate('/contacto') /*window.open(`https://wa.me/584142677943`, "_blank")*/}>
+              Mas información <i className="fas fa-paper-plane"></i>
             </button>
           </div>
         </section>
