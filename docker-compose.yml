@@ -52,6 +52,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "5000:5000"
     volumes:
@@ -75,6 +76,7 @@ services:
   frontend:
     build:
       context: ./frontend
+    restart: always
     ports:
       - "3000:3000"
     # Montamos tu código para hot-reload, pero preservamos node_modules dentro del contenedor:
