@@ -31,7 +31,6 @@ services:
     autoDeploy: true
     healthCheckPath: /healthz
 
-    # Variables de entorno
     envVars:
       - key: DATABASE_URL
         value: postgresql://neondb_owner:npg_xsBDCO19fVhS@ep-blue-math-a4s3507k-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
@@ -45,14 +44,12 @@ services:
       - key: JWT_SECRET
         generateValue: true
 
-      # Si usas Cloudinary desde el backend
       - key: CLOUDINARY_CLOUD_NAME
         value: dn3qxqsm5
+
       - key: CLOUDINARY_UPLOAD_PRESET
         value: canchago-preset
 
-    # Si tu repo tiene frontend y backend juntos
-    # Render construirá el frontend y luego lanzará Flask
     buildCommand: |
       cd frontend
       npm install
@@ -60,6 +57,4 @@ services:
       cd ..
       pip install -r requirements.txt
 
-    # Render iniciará el servidor Flask con Gunicorn
-    startCommand: gunicorn app:app --bind 0.0.0.0:10000
-
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
