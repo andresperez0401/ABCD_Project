@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',  
     port: 3000,
-    allowedHosts: ['abcdlanguages.com', 'www.abcdlanguages.com']        
+    allowedHosts: ['abcdlanguages.com', 'www.abcdlanguages.com'],
+    proxy: {
+    '/api': 'http://localhost:5000',
+    }
   }
 })

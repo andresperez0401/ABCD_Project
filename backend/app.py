@@ -21,7 +21,7 @@ from api.routes.testimonio import testimonio_bp
 
 load_dotenv()
 
-app = Flask(__name__, static_folder="static")  # servirá /backend/static
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
 
 # Si sirves frontend desde el mismo dominio, CORS podría ser innecesario.
 # Si prefieres mantenerlo:
