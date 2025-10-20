@@ -30,7 +30,7 @@ CORS(app, supports_credentials=True)
 # DB: usa DATABASE_URL si existe; si no, cae a SQLite (solo dev local)
 base_dir = os.path.dirname(os.path.realpath(__file__))
 ruta_sqlite = os.path.join(base_dir, "sqlite", "abcdatabase.db")
-default_uri = "postgresql://neondb_owner:npg_xsBDCO19fVhS@ep-blue-math-a4s3507k-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+default_uri = "postgresql+psycopg://neondb_owner:npg_xsBDCO19fVhS@ep-blue-math-a4s3507k-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 # f"sqlite:///{ruta_sqlite}"
 db_uri = os.getenv("DATABASE_URL", default_uri).replace("postgres://", "postgresql://")
 print(db_uri)
