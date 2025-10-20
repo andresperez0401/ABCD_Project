@@ -1,8 +1,8 @@
-"""auto
+"""initial migration for Neon
 
-Revision ID: e7404444383e
+Revision ID: 2bf08edc29f4
 Revises: 
-Create Date: 2025-07-24 17:21:02.283307
+Create Date: 2025-10-20 13:12:16.039690
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e7404444383e'
+revision = '2bf08edc29f4'
 down_revision = None
 branch_labels = None
 depends_on = None
