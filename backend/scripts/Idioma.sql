@@ -1,4 +1,4 @@
---Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_servicio
+--Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_destino → curso_servicio
 
 INSERT INTO idioma (nombre, descripcion) 
 VALUES 

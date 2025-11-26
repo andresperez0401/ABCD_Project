@@ -14,6 +14,14 @@ curso_servicio = Table(
     Column('servicio_id', Integer, ForeignKey('servicio.idServicio'), primary_key=True)
 )
 
+# Tabla de asociación para la relación Curso-Destino
+curso_destino = Table(
+    'curso_destino',
+    db.metadata,
+    Column('curso_id', Integer, ForeignKey('curso.idCurso'), primary_key=True),
+    Column('destino_id', Integer, ForeignKey('destino.idDestino'), primary_key=True)
+)
+
 # ---------------------------- Usuario ----------------------------
 class Usuario(db.Model):
     __tablename__ = 'usuario'
@@ -64,7 +72,7 @@ class Destino(db.Model):
     imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
 
     ciudades: Mapped[list['Ciudad']] = relationship('Ciudad', back_populates='destino', cascade='all, delete-orphan')
-    cursos: Mapped[list['Curso']] = relationship('Curso', back_populates='destino')
+    cursos: Mapped[list['Curso']] = relationship('Curso', secondary=curso_destino, back_populates='destinos')
 
     def serialize(self):
         return {
@@ -132,8 +140,11 @@ class Curso(db.Model):
         back_populates='cursos'
     )
 
-    destino_id: Mapped[int] = mapped_column(Integer, ForeignKey('destino.idDestino'), nullable=False)
-    destino: Mapped['Destino'] = relationship('Destino', back_populates='cursos')
+    destinos: Mapped[list['Destino']] = relationship(
+        'Destino',
+        secondary=curso_destino,
+        back_populates='cursos'
+    )
 
     idioma_id: Mapped[int] = mapped_column(Integer, ForeignKey('idioma.idIdioma'), nullable=False)
     idioma: Mapped['Idioma'] = relationship('Idioma', back_populates='cursos')
@@ -148,7 +159,7 @@ class Curso(db.Model):
             'imageUrl': self.imageUrl,
             'tipoCurso': self.tipoCurso,
             'edades': self.edades,
-            'destino': self.destino.serialize() if self.destino else None,
+            'destinos': [d.serialize() for d in self.destinos],
             'idioma': self.idioma.serialize() if self.idioma else None,
             'servicios': [s.serialize() for s in self.servicios]
         }

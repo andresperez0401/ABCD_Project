@@ -1,4 +1,4 @@
---Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_servicio
+--Orden de ejecucion: Destinos → Ciudades → Idiomas → Servicios → Cursos → curso_destino → curso_servicio
 
 -- Asociar servicios al curso "Inglés Intensivo" (ID curso=1)
 INSERT INTO curso_servicio (curso_id, servicio_id) 
