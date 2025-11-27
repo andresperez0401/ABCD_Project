@@ -35,7 +35,12 @@ const AdminClientes = () => {
     const matchesSearch =
       cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cliente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.telefono.includes(searchTerm)
+      cliente.telefono.includes(searchTerm) ||
+      (cliente.interes || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (cliente.duracion || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(cliente.edad || '').includes(searchTerm) ||
+      (cliente.como_se_entero || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (cliente.como_se_entero_otro || '').toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesEstado = filterEstado === "all" || cliente.estado === filterEstado
 
@@ -115,7 +120,6 @@ const AdminClientes = () => {
   return (
     <div className="admin-container">
       <AdminNavbar />
-
       <div className="admin-content">
         <div className="header-section">
           <h1>Administración de Clientes</h1>
@@ -129,7 +133,6 @@ const AdminClientes = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
             <div className="filter-section">
               <label>Filtrar por estado:</label>
               <select value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)} className="estado-filter">
@@ -143,7 +146,6 @@ const AdminClientes = () => {
             </div>
           </div>
         </div>
-
         {loading ? (
           <div className="loading-container">
             <div className="spinner"></div>
@@ -160,6 +162,9 @@ const AdminClientes = () => {
                     <th>Email</th>
                     <th>Teléfono</th>
                     <th>Interés</th>
+                    <th>Duración</th>
+                    <th>Edad</th>
+                    <th>Origen</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
@@ -177,6 +182,13 @@ const AdminClientes = () => {
                         <td>{cliente.email}</td>
                         <td>{cliente.telefono}</td>
                         <td>{cliente.interes}</td>
+                        <td>{cliente.duracion || '—'}</td>
+                        <td>{cliente.edad ?? '—'}</td>
+                        <td>
+                          {cliente.como_se_entero === 'Otro' && cliente.como_se_entero_otro
+                            ? `Otro: ${cliente.como_se_entero_otro}`
+                            : (cliente.como_se_entero || '—')}
+                        </td>
                         <td>
                           <select
                             value={cliente.estado}
@@ -210,7 +222,7 @@ const AdminClientes = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="no-results">
+                      <td colSpan="10" className="no-results">
                         <i className="fas fa-exclamation-circle"></i> No se encontraron clientes
                       </td>
                     </tr>
@@ -218,17 +230,14 @@ const AdminClientes = () => {
                 </tbody>
               </table>
             </div>
-
             {filteredClientes.length > 0 && (
               <div className="pagination">
                 <button onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))} disabled={currentPage === 1}>
                   <i className="fas fa-chevron-left"></i>
                 </button>
-
                 <span>
                   Página {currentPage} de {totalPages}
                 </span>
-
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
@@ -239,85 +248,98 @@ const AdminClientes = () => {
             )}
           </>
         )}
-      </div>
-
-      {selectedCliente && (
-        <div className="cliente-detail-overlay" onClick={closeDetail}>
-          <div className="cliente-detail" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closeDetail}>
-              <i className="fas fa-times"></i>
-            </button>
-
-            <h2>Detalle del Cliente</h2>
-            <div className="detail-grid">
-              <div className="detail-item">
-                <label>ID:</label>
-                <span>{selectedCliente.idCliente}</span>
-              </div>
-              <div className="detail-item">
-                <label>Nombre:</label>
-                <span>{selectedCliente.nombre}</span>
-              </div>
-              <div className="detail-item">
-                <label>Email:</label>
-                <span>{selectedCliente.email}</span>
-              </div>
-              <div className="detail-item">
-                <label>Teléfono:</label>
-                <span>{selectedCliente.telefono}</span>
-              </div>
-              <div className="detail-item">
-                <label>Interés:</label>
-                <span>{selectedCliente.interes}</span>
-              </div>
-              <div className="detail-item">
-                <label>Estado:</label>
-                <div className="estado-container">
-                  <select
-                    value={selectedCliente.estado}
-                    onChange={(e) => handleEstadoChange(e, selectedCliente)}
-                    className="estado-select"
-                  >
-                    <option value="Registrado">Registrado</option>
-                    <option value="Contactado">Contactado</option>
-                    <option value="Interesado">Interesado</option>
-                    <option value="Convertido">Convertido</option>
-                    <option value="Perdido">Perdido</option>
-                  </select>
-                  {renderEstadoBadge(selectedCliente.estado)}
+        {selectedCliente && (
+          <div className="cliente-detail-overlay" onClick={closeDetail}>
+            <div className="cliente-detail" onClick={(e) => e.stopPropagation()}>
+              <button className="close-btn" onClick={closeDetail}>
+                <i className="fas fa-times"></i>
+              </button>
+              <h2>Detalle del Cliente</h2>
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <label>ID:</label>
+                  <span>{selectedCliente.idCliente}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Nombre:</label>
+                  <span>{selectedCliente.nombre}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Email:</label>
+                  <span>{selectedCliente.email}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Teléfono:</label>
+                  <span>{selectedCliente.telefono}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Interés:</label>
+                  <span>{selectedCliente.interes}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Duración:</label>
+                  <span>{selectedCliente.duracion || '—'}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Edad:</label>
+                  <span>{selectedCliente.edad ?? '—'}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Origen:</label>
+                  <span>
+                    {selectedCliente.como_se_entero === 'Otro' && selectedCliente.como_se_entero_otro
+                      ? `Otro: ${selectedCliente.como_se_entero_otro}`
+                      : (selectedCliente.como_se_entero || '—')}
+                  </span>
+                </div>
+                <div className="detail-item">
+                  <label>Estado:</label>
+                  <div className="estado-container">
+                    <select
+                      value={selectedCliente.estado}
+                      onChange={(e) => handleEstadoChange(e, selectedCliente)}
+                      className="estado-select"
+                    >
+                      <option value="Registrado">Registrado</option>
+                      <option value="Contactado">Contactado</option>
+                      <option value="Interesado">Interesado</option>
+                      <option value="Convertido">Convertido</option>
+                      <option value="Perdido">Perdido</option>
+                    </select>
+                    {renderEstadoBadge(selectedCliente.estado)}
+                  </div>
+                </div>
+                <div className="detail-item full-width">
+                  <label>Fecha de Registro:</label>
+                  <span>
+                    {selectedCliente.fecha_registro
+                      ? new Date(selectedCliente.fecha_registro).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
-              <div className="detail-item full-width">
-                <label>Fecha de Registro:</label>
-                <span>
-                  {selectedCliente.fecha_registro
-                    ? new Date(selectedCliente.fecha_registro).toLocaleDateString("es-ES", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })
-                    : "N/A"}
-                </span>
+              <div className="action-buttons">
+                <button className="btn-primary">
+                  <i className="fas fa-envelope"></i> Enviar Email
+                </button>
+                <button className="btn-secondary">
+                  <i className="fas fa-phone"></i> Llamar
+                </button>
+                <button className="btn-warning">
+                  <i className="fas fa-edit"></i> Editar
+                </button>
+                <button className="btn-danger" onClick={() => handleDeleteCliente(selectedCliente)}>
+                  <i className="fas fa-trash-alt"></i> Eliminar
+                </button>
               </div>
             </div>
-
-            <div className="action-buttons">
-              <button className="btn-primary">
-                <i className="fas fa-envelope"></i> Enviar Email
-              </button>
-              <button className="btn-secondary">
-                <i className="fas fa-phone"></i> Llamar
-              </button>
-              <button className="btn-warning">
-                <i className="fas fa-edit"></i> Editar
-              </button>
-              <button className="btn-danger" onClick={() => handleDeleteCliente(selectedCliente)}>
-                <i className="fas fa-trash-alt"></i> Eliminar
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

@@ -62,6 +62,7 @@ def limpiar_base_datos():
     try:
         # Orden inverso para respetar foreign keys
         db.session.execute(text("DELETE FROM curso_servicio"))
+        db.session.execute(text("DELETE FROM curso_idioma"))
         db.session.execute(text("DELETE FROM curso_destino"))
         db.session.execute(text("DELETE FROM curso"))
         db.session.execute(text("DELETE FROM servicio"))
@@ -99,6 +100,7 @@ def poblar_base_datos():
         'Servicios.sql',
         'Curso.sql',
         'CursoDestino.sql',
+        'CursoIdioma.sql',
         'CursoServicios.sql',
         'Testimonio.sql'
     ]
@@ -126,6 +128,7 @@ def verificar_datos():
         ('servicio', 'Servicios'),
         ('curso', 'Cursos'),
         ('curso_destino', 'Relaciones Curso-Destino'),
+        ('curso_idioma', 'Relaciones Curso-Idioma'),
         ('curso_servicio', 'Relaciones Curso-Servicio'),
         ('testimonio', 'Testimonios')
     ]

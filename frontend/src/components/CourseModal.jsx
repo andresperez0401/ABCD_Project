@@ -32,16 +32,31 @@ export default function CourseModal({ isOpen, onRequestClose, course }) {
           className="cm-image"
           style={{ backgroundImage: `url(${course.imageUrl})` }}
         />
-        <h2 className="cm-title">{course.name}</h2>
+        <h2 className="cm-title">{course.nombre}</h2>
       </div>
       <div className="cm-body">
-        <p className="cm-desc">{course.description}</p>
+        <p className="cm-desc">{course.descripcion}</p>
         <ul className="cm-info">
-          <li><FaGlobe /> <strong>Destino:</strong> {course.destino.nombre}</li>
+          <li>
+            <FaGlobe /> <strong>Destinos:</strong>{" "}
+            {course.destinos && course.destinos.length > 0 
+              ? course.destinos.map(d => d.nombre).join(', ')
+              : 'Sin destino'}
+          </li>
           <li><FaUsers /> <strong>Edades:</strong> {course.edades}</li>
           <li><FaClock /> <strong>Duración:</strong> {course.duracion}</li>
-          {/* <li><FaHotel /> <strong>Servicios:</strong> {course.servici}</li> */}
-          <li><FaLanguage /> <strong>Idioma:</strong> {course.idioma.nombre}</li>
+          <li>
+            <FaLanguage /> <strong>Idiomas:</strong>{" "}
+            {course.idiomas && course.idiomas.length > 0
+              ? course.idiomas.map(i => i.nombre).join(', ')
+              : 'N/A'}
+          </li>
+          {course.servicios && course.servicios.length > 0 && (
+            <li>
+              <FaHotel /> <strong>Servicios:</strong>{" "}
+              {course.servicios.map(s => s.nombre).join(', ')}
+            </li>
+          )}
         </ul>
       </div>
       <div className="cm-footer">

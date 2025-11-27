@@ -27,7 +27,7 @@ const AdminCursos = () => {
     nivel: "",
     tipoCurso: "",
     edades: "",
-    destino_id: "",
+    destinos: [],
     idioma_id: "",
     servicios: [],
     imageUrl: "",
@@ -71,8 +71,8 @@ const AdminCursos = () => {
       nivel: "",
       tipoCurso: "",
       edades: "",
-      destino_id: "",
-      idioma_id: "",
+      destinos: [],
+      idiomas: [],
       servicios: [],
       imageUrl: "",
     })
@@ -91,9 +91,9 @@ const AdminCursos = () => {
       nivel: curso.nivel,
       tipoCurso: curso.tipoCurso,
       edades: curso.edades,
-      destino_id: curso.destino_id,
-      idioma_id: curso.idioma_id,
-      servicios: curso.servicios.map((s) => s.idServicio),
+      destinos: curso.destinos ? curso.destinos.map((d) => d.idDestino) : [],
+      idiomas: curso.idiomas ? curso.idiomas.map((i) => i.idIdioma) : [],
+      servicios: curso.servicios ? curso.servicios.map((s) => s.idServicio) : [],
       imageUrl: curso.imageUrl || "",
     })
     setPreviewUrl(curso.imageUrl || "")
@@ -113,6 +113,26 @@ const AdminCursos = () => {
     setFormData((prev) => {
       const servicios = isChecked ? [...prev.servicios, servicioId] : prev.servicios.filter((id) => id !== servicioId)
       return { ...prev, servicios }
+    })
+  }
+
+  const handleDestinoChange = (e) => {
+    const destinoId = Number.parseInt(e.target.value)
+    const isChecked = e.target.checked
+
+    setFormData((prev) => {
+      const destinos = isChecked ? [...prev.destinos, destinoId] : prev.destinos.filter((id) => id !== destinoId)
+      return { ...prev, destinos }
+    })
+  }
+
+  const handleIdiomaChange = (e) => {
+    const idiomaId = Number.parseInt(e.target.value)
+    const isChecked = e.target.checked
+
+    setFormData((prev) => {
+      const idiomas = isChecked ? [...prev.idiomas, idiomaId] : prev.idiomas.filter((id) => id !== idiomaId)
+      return { ...prev, idiomas }
     })
   }
 
@@ -152,6 +172,18 @@ const AdminCursos = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Validar que haya al menos un destino seleccionado
+    if (!formData.destinos || formData.destinos.length === 0) {
+      toast.error("Debes seleccionar al menos un destino")
+      return
+    }
+
+    // Validar que haya al menos un idioma seleccionado
+    if (!formData.idiomas || formData.idiomas.length === 0) {
+      toast.error("Debes seleccionar al menos un idioma")
+      return
+    }
 
     // Subir imagen si hay un archivo nuevo
     let imageUrl = formData.imageUrl
@@ -252,7 +284,7 @@ const AdminCursos = () => {
                     <th>Duración</th>
                     <th>Nivel</th>
                     <th>Tipo</th>
-                    <th>Edades</th>
+                    <th>Destinos</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -276,7 +308,11 @@ const AdminCursos = () => {
                           </span>
                         </td>
                         <td>{curso.tipoCurso}</td>
-                        <td>{curso.edades}</td>
+                        <td>
+                          {curso.destinos && curso.destinos.length > 0
+                            ? curso.destinos.map((d) => d.nombre).join(", ")
+                            : "Sin destino"}
+                        </td>
                         <td>
                           <div className="admin-actions">
                             <button className="admin-btn-edit" onClick={() => openEditModal(curso)} title="Editar">
@@ -357,17 +393,17 @@ const AdminCursos = () => {
                           <span className="admin-detail-value">{curso.edades}</span>
                         </div>
 
-                        {curso.destino && (
+                        {curso.destinos && curso.destinos.length > 0 && (
                           <div className="admin-card-detail-item">
-                            <span className="admin-detail-label">Destino:</span>
-                            <span className="admin-detail-value">{curso.destino.nombre}</span>
+                            <span className="admin-detail-label">Destinos:</span>
+                            <span className="admin-detail-value">{curso.destinos.map((d) => d.nombre).join(", ")}</span>
                           </div>
                         )}
 
-                        {curso.idioma && (
+                        {curso.idiomas && curso.idiomas.length > 0 && (
                           <div className="admin-card-detail-item">
-                            <span className="admin-detail-label">Idioma:</span>
-                            <span className="admin-detail-value">{curso.idioma.nombre}</span>
+                            <span className="admin-detail-label">Idiomas:</span>
+                            <span className="admin-detail-value">{curso.idiomas.map((i) => i.nombre).join(", ")}</span>
                           </div>
                         )}
                       </div>
@@ -487,29 +523,39 @@ const AdminCursos = () => {
                     placeholder="Ej: 18-25 años"
                   />
                 </div>
+              </div>
 
-                <div className="admin-form-group">
-                  <label>Destino*</label>
-                  <select name="destino_id" value={formData.destino_id} onChange={handleInputChange} required>
-                    <option value="">Seleccionar destino</option>
-                    {store.destinos.map((destino) => (
-                      <option key={destino.idDestino} value={destino.idDestino}>
-                        {destino.nombre}
-                      </option>
-                    ))}
-                  </select>
+              <div className="admin-form-section">
+                <h3>Destinos* (selecciona al menos uno)</h3>
+                <div className="admin-servicios-grid">
+                  {store.destinos.map((destino) => (
+                    <label key={destino.idDestino} className="admin-servicio-checkbox">
+                      <input
+                        type="checkbox"
+                        value={destino.idDestino}
+                        checked={formData.destinos.includes(destino.idDestino)}
+                        onChange={handleDestinoChange}
+                      />
+                      <span>{destino.nombre}</span>
+                    </label>
+                  ))}
                 </div>
+              </div>
 
-                <div className="admin-form-group">
-                  <label>Idioma*</label>
-                  <select name="idioma_id" value={formData.idioma_id} onChange={handleInputChange} required>
-                    <option value="">Seleccionar idioma</option>
-                    {store.idiomas.map((idioma) => (
-                      <option key={idioma.idIdioma} value={idioma.idIdioma}>
-                        {idioma.nombre}
-                      </option>
-                    ))}
-                  </select>
+              <div className="admin-form-section">
+                <h3>Idiomas* (selecciona al menos uno)</h3>
+                <div className="admin-servicios-grid">
+                  {store.idiomas.map((idioma) => (
+                    <label key={idioma.idIdioma} className="admin-servicio-checkbox">
+                      <input
+                        type="checkbox"
+                        value={idioma.idIdioma}
+                        checked={formData.idiomas.includes(idioma.idIdioma)}
+                        onChange={handleIdiomaChange}
+                      />
+                      <span>{idioma.nombre}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 

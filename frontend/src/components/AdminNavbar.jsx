@@ -64,6 +64,18 @@ const AdminNavbar = () => {
           <i className="fas fa-book"></i>
           <span>Cursos</span>
         </Link>
+        <Link to="/admin/idiomas" className={`admin-nav-link ${isActive("/admin/idiomas") ? "admin-active" : ""}`}>
+          <i className="fas fa-language"></i>
+          <span>Idiomas</span>
+        </Link>
+        <Link to="/admin/servicios" className={`admin-nav-link ${isActive("/admin/servicios") ? "admin-active" : ""}`}>
+          <i className="fas fa-concierge-bell"></i>
+          <span>Servicios</span>
+        </Link>
+        <Link to="/admin/destinos" className={`admin-nav-link ${isActive("/admin/destinos") ? "admin-active" : ""}`}>
+          <i className="fas fa-map-marker-alt"></i>
+          <span>Destinos</span>
+        </Link>
       </div>
 
       {/* Desktop User Section */}
@@ -118,6 +130,33 @@ const AdminNavbar = () => {
               >
                 <i className="fas fa-book"></i>
                 <span>Cursos</span>
+                <i className="fas fa-chevron-right"></i>
+              </Link>
+              <Link
+                to="/admin/idiomas"
+                className={`admin-mobile-nav-link ${isActive("/admin/idiomas") ? "admin-active" : ""}`}
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-language"></i>
+                <span>Idiomas</span>
+                <i className="fas fa-chevron-right"></i>
+              </Link>
+              <Link
+                to="/admin/servicios"
+                className={`admin-mobile-nav-link ${isActive("/admin/servicios") ? "admin-active" : ""}`}
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-concierge-bell"></i>
+                <span>Servicios</span>
+                <i className="fas fa-chevron-right"></i>
+              </Link>
+              <Link
+                to="/admin/destinos"
+                className={`admin-mobile-nav-link ${isActive("/admin/destinos") ? "admin-active" : ""}`}
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-map-marker-alt"></i>
+                <span>Destinos</span>
                 <i className="fas fa-chevron-right"></i>
               </Link>
             </div>

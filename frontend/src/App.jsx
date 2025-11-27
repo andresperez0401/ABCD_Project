@@ -20,6 +20,9 @@ import Destinos from './components/Destinos.jsx';
 import Cursos from './components/Cursos.jsx';
 import AdminCursos from './components/AdminCursos.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminIdioma from './components/AdminIdioma.jsx';
+import AdminServicio from './components/AdminServicio.jsx';
+import AdminDestino from './components/AdminDestino.jsx';
 
 
 
@@ -45,7 +48,6 @@ const AppContent = () => {
         <Route path="/cursos" element={<Cursos />} />
         {/* <Route path="/home" element={<ListPaddel />} /> */}
 
-
         {/* Rutas Protegidas */}
         <Route 
           path="/admin/cursos" 
@@ -63,8 +65,30 @@ const AppContent = () => {
             </ProtectedRoute>
           } 
         />
-
-
+        <Route 
+          path="/admin/idiomas" 
+          element={
+            <ProtectedRoute>
+              <AdminIdioma />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/servicios" 
+          element={
+            <ProtectedRoute>
+              <AdminServicio />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/destinos" 
+          element={
+            <ProtectedRoute>
+              <AdminDestino />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
       <WhatsAppButton />
       <Footer />

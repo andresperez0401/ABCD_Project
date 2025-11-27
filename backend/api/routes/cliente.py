@@ -33,7 +33,8 @@ def create_cliente():
         return jsonify({'msg': 'No se recibieron datos'}), 400
     
     # Campos requeridos
-    required_fields = ['nombre', 'email', 'telefono']
+    # Ahora también requerimos: interes, duracion, edad y como_se_entero
+    required_fields = ['nombre', 'email', 'telefono', 'interes', 'duracion', 'edad', 'como_se_entero']
 
     # Verificamos que no falte ninguno de los campos requeridos ni que estén vacíos
     empty_fields = [field for field in required_fields if not data.get(field)]
@@ -49,6 +50,13 @@ def create_cliente():
     if existing_cliente:
         return jsonify({"error": "El email ya se encuentra registrado"}), 400
 
+    # Validación adicional: si como_se_entero == 'Otro', se requiere el campo como_se_entero_otro
+    if data.get('como_se_entero') == 'Otro' and not data.get('como_se_entero_otro'):
+        return jsonify({
+            'msg': 'Debe especificar el detalle en "Otro"',
+            'Campos vacíos o faltantes': ['como_se_entero_otro']
+        }), 400
+
     # Creamos el nuevo cliente
     nuevo_cliente = Cliente(
         nombre=data.get('nombre'),
@@ -56,7 +64,11 @@ def create_cliente():
         telefono=data.get('telefono'),
         interes=data.get('interes', ''),
         estado='Registrado',
-        fecha_registro=datetime.utcnow()
+        fecha_registro=datetime.utcnow(),
+        duracion=data.get('duracion'),
+        edad=int(data.get('edad')) if str(data.get('edad')).isdigit() else None,
+        como_se_entero=data.get('como_se_entero'),
+        como_se_entero_otro=data.get('como_se_entero_otro')
     )
 
     # Agregar a la base de datos y confirmar
@@ -94,6 +106,17 @@ def update_cliente(id):
     
     if 'interes' in data:
         cliente.interes = data['interes']
+    if 'duracion' in data:
+        cliente.duracion = data['duracion']
+    if 'edad' in data:
+        try:
+            cliente.edad = int(data['edad']) if data['edad'] is not None else None
+        except (TypeError, ValueError):
+            return jsonify({"error": "Edad inválida"}), 400
+    if 'como_se_entero' in data:
+        cliente.como_se_entero = data['como_se_entero']
+    if 'como_se_entero_otro' in data:
+        cliente.como_se_entero_otro = data['como_se_entero_otro']
     
     db.session.commit()
     return jsonify(cliente.serialize()), 200

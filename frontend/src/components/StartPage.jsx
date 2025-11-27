@@ -6,7 +6,7 @@ import "../styles/StartPage.css";
 import StatsBar from "./StatsBar";              
 import VideoTestimonials from "./VideoTestimonials";
 import ContactForm from "./ContactForm";
-import Footer from "./Footer"; // Nuevo footer
+import Footer from "./Footer";
 
 const StartPage = () => {
 

@@ -6,6 +6,7 @@ import { FaMapMarkerAlt, FaClock, FaUsers, FaLanguage, FaArrowRight, FaGraduatio
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi"
 import "../styles/CourseCards.css"
 import CourseModal from "./CourseModal.jsx"
+import { SkeletonCard } from "./Loader.jsx"
 
 export default function CourseCards() {
   const { store, actions } = useContext(Context)
@@ -14,6 +15,7 @@ export default function CourseCards() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [slidesToShow, setSlidesToShow] = useState(2)
   const [isHovering, setIsHovering] = useState(false)
+  const [localLoading, setLocalLoading] = useState(false)
 
   useEffect(() => {
     const updateSlides = () => {
@@ -26,22 +28,39 @@ export default function CourseCards() {
       }
     }
 
-    const response = actions.getCursos()
+    // Solo cargar si no hay cursos y no se están cargando globalmente
+    if (store.cursos.length === 0 && !store.isLoading) {
+      setLocalLoading(true)
+      actions.getCursos().finally(() => setLocalLoading(false))
+    }
+    
     updateSlides()
     window.addEventListener("resize", updateSlides)
     return () => window.removeEventListener("resize", updateSlides)
   }, [])
 
   const goNext = () => {
-    setCurrentIndex((prev) => (prev >= Math.ceil(store.cursos.length / slidesToShow) - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => {
+      const last = Math.ceil(store.cursos.length / slidesToShow) - 1
+      const next = prev >= last ? 0 : prev + 1
+      // scroll to top smoothly when page of carousel changes
+      if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+      return next
+    })
   }
 
   const goPrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? Math.ceil(store.cursos.length / slidesToShow) - 1 : prev - 1))
+    setCurrentIndex((prev) => {
+      const last = Math.ceil(store.cursos.length / slidesToShow) - 1
+      const next = prev === 0 ? last : prev - 1
+      if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+      return next
+    })
   }
 
   const goToSlide = (index) => {
     setCurrentIndex(index)
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleViewMore = (course) => {
@@ -51,6 +70,19 @@ export default function CourseCards() {
 
   const startIndex = currentIndex * slidesToShow
   const visibleCourses = store.cursos.slice(startIndex, startIndex + slidesToShow)
+
+  // Mostrar skeleton loaders mientras carga
+  if (localLoading || (store.cursos.length === 0 && store.isLoading)) {
+    return (
+      <div className="course-carousel-container">
+        <div className="cards-wrapper">
+          {[...Array(slidesToShow)].map((_, idx) => (
+            <SkeletonCard key={idx} />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -69,7 +101,12 @@ export default function CourseCards() {
 
         <div className="cards-wrapper">
           {visibleCourses.map((curso, idx) => (
-            <div key={curso.idCurso} className="card" onClick={() => handleViewMore(curso)}>
+            <div 
+              key={curso.idCurso} 
+              className="card servicio-like"
+              style={{ animationDelay: `${idx * 0.1}s` }}
+              onClick={() => handleViewMore(curso)}
+            >
               <div className="card-image-container">
                 {curso.imageUrl ? (
                   <div className="card-image" style={{ backgroundImage: `url(${curso.imageUrl})` }} />
@@ -86,16 +123,25 @@ export default function CourseCards() {
               </div>
 
               <div className="card-content">
-                <h3>{curso.nombre}</h3>
-                <p className="card-location">
-                  <FaMapMarkerAlt /> {curso.destino.nombre}
-                </p>
-                <p className="card-desc">{curso.descripcion}</p>
+                <h3 className="card-title-ux">{curso.nombre}</h3>
+                <div className="card-destinations">
+                  <FaMapMarkerAlt /> 
+                  <span>
+                    {curso.destinos && curso.destinos.length > 0 
+                      ? curso.destinos.map(d => d.nombre).join(', ')
+                      : 'Sin destino'}
+                  </span>
+                </div>
+                <p className="card-desc-ux">{curso.descripcion}</p>
 
                 <div className="card-info">
                   <div className="card-info-item">
                     <FaLanguage />
-                    <span>{curso.idioma.nombre}</span>
+                    <span>
+                      {curso.idiomas && curso.idiomas.length > 0
+                        ? curso.idiomas.map(i => i.nombre).join(', ')
+                        : 'N/A'}
+                    </span>
                   </div>
                   <div className="card-info-item">
                     <FaClock />
@@ -108,24 +154,24 @@ export default function CourseCards() {
                 </div>
 
                 <div className="card-services">
-                  {curso.servicios.slice(0, 2).map((servicio) => (
+                  {curso.servicios && curso.servicios.slice(0, 2).map((servicio) => (
                     <span key={servicio.idServicio} className="service-tag">
                       {servicio.nombre}
                     </span>
                   ))}
-                  {curso.servicios.length > 2 && (
+                  {curso.servicios && curso.servicios.length > 2 && (
                     <span className="service-more">+{curso.servicios.length - 2} más</span>
                   )}
                 </div>
 
                 <button
-                  className="card-btn"
+                  className="card-btn-ux"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleViewMore(curso)
                   }}
                 >
-                  Ver detalles
+                  <span>Ver detalles</span>
                   <FaArrowRight />
                 </button>
               </div>

@@ -32,51 +32,83 @@
   padding-top: 80px; /* Espacio para el navbar */
 }
 
-/* Hero Section - Estilo Destinos/Servicios */
+/* Hero Section - Diseño Visual Moderno */
 .courses-hero {
   position: relative;
-  height: 500px;
+  height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 60px;
-  border-radius: 0 0 30px 30px;
+  margin-bottom: 50px;
   overflow: hidden;
-  background-color: #93BF21;
-
+  background: 
+    linear-gradient(135deg, #93BF21 0%, #7da91a 50%, #6a8f16 100%);
+  box-shadow: 0 10px 40px rgba(147, 191, 33, 0.2);
 }
 
-.courses-hero-overlay {
+.courses-hero::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  animation: float 8s ease-in-out infinite;
+}
+
+.courses-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.courses-hero-overlay {
+  display: none;
 }
 
 .courses-hero-content {
   position: relative;
   z-index: 2;
   text-align: center;
-  color: var(--courses-white);
   padding: 0 20px;
   max-width: 800px;
 }
 
 .courses-hero-content h1 {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  font-weight: 800;
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeInDown 0.8s ease-out;
 }
 
 .courses-hero-content p {
-  font-size: 1.6rem;
-  margin-bottom: 30px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  font-weight: 300;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
 }
 
 /* Container */
@@ -784,31 +816,99 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
-  gap: 1rem;
+  min-height: 70vh;
+  gap: 2rem;
+  padding: 2rem;
 }
 
-.courses-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--courses-gray-200);
-  border-top: 3px solid var(--courses-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.courses-loading .mini-loader {
+  transform: scale(1.5);
 }
 
 .courses-loading p {
-  color: var(--courses-gray-600);
-  font-weight: 500;
+  color: var(--courses-gray-700);
+  font-weight: 600;
+  font-size: 1.25rem;
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Skeleton loaders for course grid */
+.courses-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.courses-skeleton-card {
+  background: white;
+  border-radius: var(--courses-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--courses-shadow);
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+.courses-skeleton-image {
+  height: 200px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.courses-skeleton-content {
+  padding: 1.5rem;
+}
+
+.courses-skeleton-title {
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  width: 80%;
+}
+
+.courses-skeleton-text {
+  height: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.courses-skeleton-text:last-child {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes skeleton-loading {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Error */

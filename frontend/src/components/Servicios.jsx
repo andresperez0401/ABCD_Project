@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Context } from '../store/appContext.jsx';
 import Navbar from './Navbar';
 import Footer from './Footer'; // Asumiendo que tienes un componente Footer
+import { SkeletonCard } from './Loader';
 import '../styles/Servicios.css';
 import { Link } from 'react-router-dom';
 
@@ -29,6 +30,7 @@ const Servicios = () => {
       setLoading(true);
       setError(null);
       try {
+        // Carga optimizada sin esperas innecesarias
         await actions.getServicios();
         setLoading(false);
       } catch (err) {
@@ -80,10 +82,10 @@ const Servicios = () => {
 
   // Estilos para las categorías
   const categoryStyles = {
-    alojamiento: { background: 'linear-gradient(135deg, #9CBE30 0%, #a6c1ee 100%)' },
-    academico: { background: 'linear-gradient(135deg, #a6c1ee 0%, #9CBE30 100%)' },
-    transporte: { background: 'linear-gradient(135deg, #9CBE30 0%, #a6c1ee 100%)' },
-    otros: { background: 'linear-gradient(135deg, #a6c1ee 0%, #9CBE30 100%)' }
+    alojamiento: { background: 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)' },
+    academico: { background: 'linear-gradient(135deg, #e8e8e8 0%, #f8f8f8 100%)' },
+    transporte: { background: 'linear-gradient(135deg, #f0f0f0 0%, #fafafa 100%)' },
+    otros: { background: 'linear-gradient(135deg, #ececec 0%, #f6f6f6 100%)' }
   };
 
   return (
@@ -125,14 +127,16 @@ const Servicios = () => {
           </div> */}
         </div>
 
-        {/* Loading and Error States */}
+        {/* Loading State with Skeletons */}
         {loading && (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Cargando servicios...</p>
+          <div className="servicios-grid">
+            {[...Array(6)].map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
           </div>
         )}
 
+        {/* Error State */}
         {error && (
           <div className="error-container">
             <i className="fas fa-exclamation-triangle"></i>
@@ -184,9 +188,9 @@ const Servicios = () => {
                       <button
                         className="info-btn"
                         onClick={() => window.open(`https://wa.me/584142677943`, "_blank")}
-                        >
+                      >
                         Más información <i className="fas fa-arrow-right"></i>
-                        </button>
+                      </button>
                     </div>
                   </div>
                 );
@@ -214,7 +218,6 @@ const Servicios = () => {
           </div>
         </section>
       </div>
-      
     </div>
   );
 };

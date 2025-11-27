@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Curso, Destino, Idioma, Servicio
 from flask_jwt_extended import jwt_required
+from sqlalchemy.orm import joinedload
 
 curso_bp = Blueprint('curso', __name__)
 
@@ -9,7 +10,12 @@ curso_bp = Blueprint('curso', __name__)
 
 @curso_bp.route('', methods=['GET'])
 def get_cursos():
-    cursos = Curso.query.all()
+    # Optimización: cargar todas las relaciones de una vez con joinedload
+    cursos = Curso.query.options(
+        joinedload(Curso.destinos),
+        joinedload(Curso.idiomas),
+        joinedload(Curso.servicios)
+    ).all()
     return jsonify([curso.serialize() for curso in cursos]), 200
 
 # Finalizar ruta para obtener todos los cursos
@@ -39,7 +45,7 @@ def create_curso():
     # Campos requeridos
     required_fields = [
         'nombre', 'descripcion', 'duracion', 'nivel', 
-        'tipoCurso', 'edades', 'destino_id', 'idioma_id'
+        'tipoCurso', 'edades', 'destinos', 'idiomas'
     ]
     empty_fields = [f for f in required_fields if not data.get(f)]
     if empty_fields:
@@ -48,14 +54,31 @@ def create_curso():
             'campos_faltantes': empty_fields
         }), 400
     
-    # Verificar que destino e idioma existen
-    destino = Destino.query.get(data['destino_id'])
-    if not destino:
-        return jsonify({"error": "Destino no encontrado"}), 404
+    # Verificar que destinos sea un array y no esté vacío
+    destino_ids = data.get('destinos', [])
+    if not isinstance(destino_ids, list) or len(destino_ids) == 0:
+        return jsonify({"error": "Debe proporcionar al menos un destino"}), 400
     
-    idioma = Idioma.query.get(data['idioma_id'])
-    if not idioma:
-        return jsonify({"error": "Idioma no encontrado"}), 404
+    # Verificar que todos los destinos existen
+    destinos = []
+    for destino_id in destino_ids:
+        destino = Destino.query.get(destino_id)
+        if not destino:
+            return jsonify({"error": f"Destino con ID {destino_id} no encontrado"}), 404
+        destinos.append(destino)
+    
+    # Verificar que idiomas sea un array y no esté vacío
+    idioma_ids = data.get('idiomas', [])
+    if not isinstance(idioma_ids, list) or len(idioma_ids) == 0:
+        return jsonify({"error": "Debe proporcionar al menos un idioma"}), 400
+    
+    # Verificar que todos los idiomas existen
+    idiomas = []
+    for idioma_id in idioma_ids:
+        idioma = Idioma.query.get(idioma_id)
+        if not idioma:
+            return jsonify({"error": f"Idioma con ID {idioma_id} no encontrado"}), 404
+        idiomas.append(idioma)
     
     # Verificar si el curso ya existe
     existing_curso = Curso.query.filter_by(nombre=data['nombre']).first()
@@ -70,10 +93,14 @@ def create_curso():
         nivel=data['nivel'],
         imageUrl=data.get('imageUrl'),
         tipoCurso=data['tipoCurso'],
-        edades=data['edades'],
-        destino_id=data['destino_id'],
-        idioma_id=data['idioma_id']
+        edades=data['edades']
     )
+    
+    # Asociar destinos
+    nuevo_curso.destinos = destinos
+    
+    # Asociar idiomas
+    nuevo_curso.idiomas = idiomas
     
     # Asociar servicios
     servicio_ids = data.get('servicios', [])
@@ -133,17 +160,31 @@ def update_curso(id):
     if 'imageUrl' in data:
         curso.imageUrl = data['imageUrl'].strip() if data['imageUrl'] else None
     
-    if 'destino_id' in data and data['destino_id'] != curso.destino_id:
-        destino = Destino.query.get(data['destino_id'])
-        if not destino:
-            return jsonify({"error": "Destino no encontrado"}), 404
-        curso.destino_id = data['destino_id']
+    # Actualizar destinos (ahora es un array)
+    if 'destinos' in data:
+        destino_ids = data['destinos']
+        if not isinstance(destino_ids, list) or len(destino_ids) == 0:
+            return jsonify({"error": "Debe proporcionar al menos un destino"}), 400
+        
+        curso.destinos = []
+        for destino_id in destino_ids:
+            destino = Destino.query.get(destino_id)
+            if not destino:
+                return jsonify({"error": f"Destino con ID {destino_id} no encontrado"}), 404
+            curso.destinos.append(destino)
     
-    if 'idioma_id' in data and data['idioma_id'] != curso.idioma_id:
-        idioma = Idioma.query.get(data['idioma_id'])
-        if not idioma:
-            return jsonify({"error": "Idioma no encontrado"}), 404
-        curso.idioma_id = data['idioma_id']
+    # Actualizar idiomas (ahora es un array)
+    if 'idiomas' in data:
+        idioma_ids = data['idiomas']
+        if not isinstance(idioma_ids, list) or len(idioma_ids) == 0:
+            return jsonify({"error": "Debe proporcionar al menos un idioma"}), 400
+        
+        curso.idiomas = []
+        for idioma_id in idioma_ids:
+            idioma = Idioma.query.get(idioma_id)
+            if not idioma:
+                return jsonify({"error": f"Idioma con ID {idioma_id} no encontrado"}), 404
+            curso.idiomas.append(idioma)
     
     # Actualizar servicios
     if 'servicios' in data:

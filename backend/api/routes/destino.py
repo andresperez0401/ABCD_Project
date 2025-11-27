@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Destino
 from flask_jwt_extended import jwt_required
+from sqlalchemy.orm import joinedload
 
 destino_bp = Blueprint('destino', __name__)
 
@@ -9,7 +10,10 @@ destino_bp = Blueprint('destino', __name__)
 
 @destino_bp.route('', methods=['GET'])
 def get_destinos():
-    destinos = Destino.query.all()
+    # Optimización: cargar relaciones de una vez
+    destinos = Destino.query.options(
+        joinedload(Destino.cursos)
+    ).all()
     return jsonify([destino.serialize() for destino in destinos]), 200
 
 # Finalizar ruta para obtener todos los destinos

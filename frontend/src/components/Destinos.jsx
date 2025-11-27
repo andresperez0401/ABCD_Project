@@ -26,30 +26,28 @@ const Destinos = () => {
   ];
 
   useEffect(() => {
-    const fetchDestinos = async () => {
+    // Si ya hay destinos en el store, usarlos directamente
+    if (store.destinos.length > 0) {
+      setDestinos(store.destinos);
+      setFilteredDestinos(store.destinos);
+      setLoading(false);
+    } 
+    // Solo cargar si no hay destinos y no se están cargando globalmente
+    else if (!store.isLoading) {
       setLoading(true);
       setError(null);
-      try {
-        await actions.getDestinos();
-        setLoading(false);
-      } catch (err) {
-        setError("Error al cargar los destinos. Por favor, inténtalo de nuevo.");
-        setLoading(false);
-        console.error("Error fetching destinos:", err);
-      }
-    };
-
-    fetchDestinos();
-  }, []);
-
-  useEffect(() => {
-    setDestinos(store.destinos);
-    setFilteredDestinos(store.destinos);
-  }, [store.destinos]);
+      actions.getDestinos()
+        .catch(err => {
+          setError("Error al cargar los destinos. Por favor, inténtalo de nuevo.");
+          console.error("Error fetching destinos:", err);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [store.destinos, store.isLoading]);
 
   // Filtro de destinos
   useEffect(() => {
-    let result = [...destinos];
+    let result = [...(destinos.length > 0 ? destinos : store.destinos)];
     
     // Filtrar por término de búsqueda
     if (searchTerm) {
@@ -115,9 +113,17 @@ const Destinos = () => {
 
         {/* Loading and Error States */}
         {loading && (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Cargando destinos...</p>
+          <div className="destinos-skeleton-grid">
+            {[...Array(6)].map((_, idx) => (
+              <div key={idx} className="destino-skeleton-card">
+                <div className="skeleton-image-destino"></div>
+                <div className="skeleton-content-destino">
+                  <div className="skeleton-title-destino"></div>
+                  <div className="skeleton-text-destino"></div>
+                  <div className="skeleton-text-destino short"></div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

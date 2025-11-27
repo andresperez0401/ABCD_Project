@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Servicio
 from flask_jwt_extended import jwt_required
+from sqlalchemy.orm import joinedload
 
 servicio_bp = Blueprint('servicio', __name__)
 
@@ -9,7 +10,10 @@ servicio_bp = Blueprint('servicio', __name__)
 
 @servicio_bp.route('', methods=['GET'])
 def get_servicios():
-    servicios = Servicio.query.all()
+    # Optimización: cargar relaciones de una vez
+    servicios = Servicio.query.options(
+        joinedload(Servicio.cursos)
+    ).all()
     return jsonify([servicio.serialize() for servicio in servicios]), 200
 
 # Finalizar ruta para obtener todos los servicios

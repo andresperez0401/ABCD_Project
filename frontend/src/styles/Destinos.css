@@ -26,51 +26,83 @@
   padding: 0 20px;
 }
 
-/* Hero Section */
+/* Hero Section - Diseño Visual Moderno */
 .destinos-hero {
   position: relative;
-  height: 500px;
+  height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 60px;
-  border-radius: 0 0 30px 30px;
+  margin-bottom: 50px;
   overflow: hidden;
-  background-color: #93BF21;
-
+  background: 
+    linear-gradient(135deg, #93BF21 0%, #7da91a 50%, #6a8f16 100%);
+  box-shadow: 0 10px 40px rgba(147, 191, 33, 0.2);
 }
 
-.hero-overlay {
+.destinos-hero::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  animation: float 8s ease-in-out infinite;
+}
+
+.destinos-hero::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+.hero-overlay {
+  display: none;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
   text-align: center;
-  color: var(--light-text);
   padding: 0 20px;
   max-width: 800px;
 }
 
 .hero-content h1 {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  font-weight: 800;
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeInDown 0.8s ease-out;
 }
 
 .hero-content p {
-  font-size: 1.6rem;
-  margin-bottom: 30px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  font-weight: 300;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.2s backwards;
 }
 
 /* Controls Section */
@@ -157,25 +189,78 @@
   height: 400px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
+  will-change: transform, box-shadow;
+  animation: fadeInUp 0.6s ease-out backwards;
+  transform-style: preserve-3d;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* Animación stagger para tarjetas */
+.destino-card:nth-child(1) { animation-delay: 0.1s; }
+.destino-card:nth-child(2) { animation-delay: 0.2s; }
+.destino-card:nth-child(3) { animation-delay: 0.3s; }
+.destino-card:nth-child(4) { animation-delay: 0.4s; }
+.destino-card:nth-child(5) { animation-delay: 0.5s; }
+.destino-card:nth-child(6) { animation-delay: 0.6s; }
+.destino-card:nth-child(n+7) { animation-delay: 0.7s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .destino-card:hover {
-  transform: translateY(-15px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-12px) scale(1.01);
+  box-shadow: 
+    0 30px 65px rgba(0, 0, 0, 0.15),
+    0 15px 30px rgba(0, 0, 0, 0.1),
+    0 5px 15px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(200, 200, 200, 0.2);
+  border-color: rgba(0, 0, 0, 0.08);
+  filter: brightness(1.03);
+}
+
+.destino-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  background: radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.85) 0%, rgba(248, 248, 250, 0.3) 50%, rgba(240, 240, 242, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.destino-card:hover::after {
+  opacity: 1;
 }
 
 .destino-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s ease;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  filter: brightness(0.95) saturate(0.98);
 }
 
 .destino-card:hover .destino-image {
-  transform: scale(1.1);
+  transform: scale(1.06);
+  filter: brightness(1.02) saturate(1.05);
 }
 
 .image-placeholder {
@@ -195,37 +280,45 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50%;
+  height: 30%;
   background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-  padding: 30px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  transition: height 0.5s ease;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 2;
 }
 
 .destino-card:hover .destino-overlay {
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(135deg, rgba(0,0,0,0.88) 0%, rgba(147, 191, 33, 0.78) 100%);
+  backdrop-filter: blur(8px);
   justify-content: center;
+  padding: 40px;
 }
 
 .destino-content {
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all 0.5s ease 0.2s;
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .destino-card:hover .destino-content {
-  transform: translateY(0);
+  transform: translateY(-8px);
   opacity: 1;
 }
 
 .destino-content h3 {
   margin-top: 0;
-  margin-bottom: 10px;
-  color: var(--light-text);
-  font-size: 1.8rem;
+  margin-bottom: 12px;
+  color: #ffffff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.6);
+  line-height: 1.2;
+  opacity: 1;
+  transition: opacity 0.6s ease;
 }
 
 .location {
@@ -236,13 +329,27 @@
   align-items: center;
   gap: 8px;
   font-size: 1.1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+}
+
+.destino-card:hover .location {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .description {
-  color: #f0f0f0;
-  line-height: 1.6;
+  color: #f5f5f5;
+  line-height: 1.7;
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 1.05rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -251,8 +358,10 @@
 }
 
 .destino-card:hover .description {
-  -webkit-line-clamp: unset;
-  line-clamp: unset;
+  opacity: 1;
+  transform: translateY(0);
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
 }
 
 .destino-badge {
@@ -261,25 +370,27 @@
   right: 20px;
   width: 50px;
   height: 50px;
-  background: var(--primary-color);
+  background: linear-gradient(135deg, #93BF21 0%, #7da91a 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  transform: translateX(100px);
+  transform: scale(0);
   opacity: 0;
-  transition: all 0.5s ease;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 4px 12px rgba(147, 191, 33, 0.4);
+  z-index: 3;
 }
 
 .destino-card:hover .destino-badge {
-  transform: translateX(0);
+  transform: scale(1);
   opacity: 1;
 }
 
 /* Loading and Error States */
-.loading-container, .error-container, .no-results {
+.error-container, .no-results {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -289,19 +400,66 @@
   grid-column: 1 / -1;
 }
 
-.loading-container .spinner {
-  width: 60px;
-  height: 60px;
-  border: 5px solid rgba(26, 115, 232, 0.2);
-  border-top: 5px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+/* Skeleton Loaders */
+.destinos-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 40px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.destino-skeleton-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-image-destino {
+  height: 280px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer-destino 2s infinite;
+}
+
+.skeleton-content-destino {
+  padding: 20px;
+}
+
+.skeleton-title-destino {
+  height: 28px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer-destino 2s infinite;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  width: 70%;
+}
+
+.skeleton-text-destino {
+  height: 18px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer-destino 2s infinite;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.skeleton-text-destino.short {
+  width: 50%;
+}
+
+@keyframes shimmer-destino {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
 }
 
 .error-container i {

@@ -1,7 +1,9 @@
 "use client"
 
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect, useMemo, useCallback, useContext } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
+import { Context } from "../store/appContext"
+import { MiniLoader } from "./Loader.jsx"
 import "../styles/Cursos.css"
 import {
   FaSearch,
@@ -50,7 +52,11 @@ const CourseModal = ({ course, isOpen, onClose }) => {
           <div className="courses-modal-details">
             <div className="courses-detail-item">
               <FaLanguage />
-              <span>{course.idioma.nombre}</span>
+              <span>
+                {course.idiomas && course.idiomas.length > 0
+                  ? course.idiomas.map(i => i.nombre).join(', ')
+                  : 'N/A'}
+              </span>
             </div>
             <div className="courses-detail-item">
               <FaClock />
@@ -66,7 +72,11 @@ const CourseModal = ({ course, isOpen, onClose }) => {
             </div>
             <div className="courses-detail-item">
               <FaMapMarkerAlt />
-              <span>{course.destino.nombre}</span>
+              <span>
+                {course.destinos && course.destinos.length > 0 
+                  ? course.destinos.map(d => d.nombre).join(', ')
+                  : 'Sin destino'}
+              </span>
             </div>
             <div className="courses-detail-item">
               <FaGraduationCap />
@@ -74,16 +84,18 @@ const CourseModal = ({ course, isOpen, onClose }) => {
             </div>
           </div>
 
-          <div className="courses-modal-services">
-            <h3>Servicios incluidos</h3>
-            <div className="courses-services-list">
-              {course.servicios.map((servicio) => (
-                <span key={servicio.idServicio} className="courses-service-tag">
-                  {servicio.nombre}
-                </span>
-              ))}
+          {course.servicios && course.servicios.length > 0 && (
+            <div className="courses-modal-services">
+              <h3>Servicios incluidos</h3>
+              <div className="courses-services-list">
+                {course.servicios.map((servicio) => (
+                  <span key={servicio.idServicio} className="courses-service-tag">
+                    {servicio.nombre}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <button className="courses-whatsapp-btn" onClick={() => navigate('/contacto')/*window.open(`https://wa.me/584142677943`, "_blank")*/}>
             {/* <FaWhatsapp /> */}
@@ -96,8 +108,8 @@ const CourseModal = ({ course, isOpen, onClose }) => {
 }
 
 const Cursos = () => {
-  const [cursos, setCursos] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { store, actions } = useContext(Context)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -123,22 +135,12 @@ const Cursos = () => {
     destino: "",
   })
 
-  // Fetch courses
+  // Cargar cursos solo si no están en el store
   useEffect(() => {
-    const fetchCursos = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/curso`)
-        if (!response.ok) throw new Error("Error al obtener cursos")
-        const data = await response.json()
-        setCursos(data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
+    if (store.cursos.length === 0 && !store.isLoading) {
+      setLoading(true)
+      actions.getCursos().finally(() => setLoading(false))
     }
-    fetchCursos()
   }, [])
 
   //Para obtener el destino en la ruta
@@ -150,34 +152,48 @@ const Cursos = () => {
 
   // Filter options
   const filterOptions = useMemo(
-    () => ({
-      idiomas: ["", ...new Set(cursos.map((curso) => curso.idioma.nombre))],
-      tiposCurso: ["", ...new Set(cursos.map((curso) => curso.tipoCurso))],
-      niveles: ["", ...new Set(cursos.map((curso) => curso.nivel))],
-      edades: ["", ...new Set(cursos.map((curso) => curso.edades))],
-      destinos: ["", ...new Set(cursos.map((curso) => curso.destino.nombre))],
-    }),
-    [cursos],
+    () => {
+      const allDestinos = store.cursos.flatMap(curso => 
+        curso.destinos ? curso.destinos.map(d => d.nombre) : []
+      );
+      const allIdiomas = store.cursos.flatMap(curso =>
+        curso.idiomas ? curso.idiomas.map(i => i.nombre) : []
+      );
+      return {
+        idiomas: ["", ...new Set(allIdiomas)],
+        tiposCurso: ["", ...new Set(store.cursos.map((curso) => curso.tipoCurso))],
+        niveles: ["", ...new Set(store.cursos.map((curso) => curso.nivel))],
+        edades: ["", ...new Set(store.cursos.map((curso) => curso.edades))],
+        destinos: ["", ...new Set(allDestinos)],
+      };
+    },
+    [store.cursos],
   )
 
   // Filtered courses
   const filteredCursos = useMemo(() => {
-    return cursos.filter((curso) => {
+    return store.cursos.filter((curso) => {
       const matchesSearch =
         !filters.search ||
         curso.nombre.toLowerCase().includes(filters.search.toLowerCase()) ||
         curso.descripcion.toLowerCase().includes(filters.search.toLowerCase())
 
+      const matchesDestino = !filters.destino || 
+        (curso.destinos && curso.destinos.some(d => d.nombre === filters.destino))
+
+      const matchesIdioma = !filters.idioma ||
+        (curso.idiomas && curso.idiomas.some(i => i.nombre === filters.idioma))
+
       return (
         matchesSearch &&
-        (!filters.idioma || curso.idioma.nombre === filters.idioma) &&
+        matchesIdioma &&
         (!filters.tipoCurso || curso.tipoCurso === filters.tipoCurso) &&
         (!filters.nivel || curso.nivel === filters.nivel) &&
         (!filters.edad || curso.edades === filters.edad) &&
-        (!filters.destino || curso.destino.nombre === filters.destino)
+        matchesDestino
       )
     })
-  }, [cursos, filters])
+  }, [store.cursos, filters])
 
   // Paginación
   const totalPages = Math.ceil(filteredCursos.length / coursesPerPage)
@@ -300,15 +316,33 @@ const Cursos = () => {
     )
   }
 
-  if (loading) {
+  if (loading || store.isLoading) {
     return (
       <div className="courses-page">
         <Navbar />
-        <div className="courses-loading">
-          <div className="courses-spinner"></div>
-          <p>Cargando cursos...</p>
+        
+        {/* Hero Section skeleton */}
+        <div className="courses-hero" style={{ background: 'linear-gradient(135deg, #93BF21 0%, #7da91a 100%)' }}>
+          <div className="courses-hero-content" style={{ textAlign: 'center' }}>
+            <h1 style={{ color: 'white', marginBottom: '1rem' }}>Cargando Cursos</h1>
+            <p style={{ color: 'rgba(255,255,255,0.9)' }}>Preparando los mejores cursos para ti...</p>
+          </div>
         </div>
-        {/* <Footer /> */}
+
+        {/* Skeleton cards grid */}
+        <div className="courses-skeleton-grid">
+          {[...Array(6)].map((_, idx) => (
+            <div key={idx} className="courses-skeleton-card">
+              <div className="courses-skeleton-image"></div>
+              <div className="courses-skeleton-content">
+                <div className="courses-skeleton-title"></div>
+                <div className="courses-skeleton-text"></div>
+                <div className="courses-skeleton-text"></div>
+                <div className="courses-skeleton-text"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -446,13 +480,19 @@ const Cursos = () => {
 
                       <div className="courses-card-meta">
                         <span>
-                          <FaLanguage /> {curso.idioma.nombre}
+                          <FaLanguage /> 
+                          {curso.idiomas && curso.idiomas.length > 0
+                            ? curso.idiomas.map(i => i.nombre).join(', ')
+                            : 'N/A'}
                         </span>
                         <span>
                           <FaClock /> {curso.duracion}
                         </span>
                         <span>
-                          <FaMapMarkerAlt /> {curso.destino.nombre}
+                          <FaMapMarkerAlt /> 
+                          {curso.destinos && curso.destinos.length > 0 
+                            ? curso.destinos.map(d => d.nombre).join(', ')
+                            : 'Sin destino'}
                         </span>
                       </div>
 

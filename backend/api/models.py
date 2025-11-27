@@ -22,6 +22,14 @@ curso_destino = Table(
     Column('destino_id', Integer, ForeignKey('destino.idDestino'), primary_key=True)
 )
 
+# Tabla de asociación para la relación Curso-Idioma
+curso_idioma = Table(
+    'curso_idioma',
+    db.metadata,
+    Column('curso_id', Integer, ForeignKey('curso.idCurso'), primary_key=True),
+    Column('idioma_id', Integer, ForeignKey('idioma.idIdioma'), primary_key=True)
+)
+
 # ---------------------------- Usuario ----------------------------
 class Usuario(db.Model):
     __tablename__ = 'usuario'
@@ -49,6 +57,11 @@ class Cliente(db.Model):
     interes: Mapped[str] = mapped_column(String(255), nullable=False)
     estado: Mapped[str] = mapped_column(String(50), nullable=True)
     fecha_registro: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)  # Nuevo campo
+    # Campos adicionales del formulario de contacto
+    duracion: Mapped[str] = mapped_column(String(50), nullable=True)
+    edad: Mapped[int] = mapped_column(Integer, nullable=True)
+    como_se_entero: Mapped[str] = mapped_column(String(50), nullable=True)
+    como_se_entero_otro: Mapped[str] = mapped_column(String(255), nullable=True)
 
 
     def serialize(self):
@@ -59,7 +72,11 @@ class Cliente(db.Model):
             'telefono': self.telefono,
             'interes': self.interes, 
             'estado': self.estado,
-            'fecha_registro': self.fecha_registro.isoformat() if self.fecha_registro else None
+            'fecha_registro': self.fecha_registro.isoformat() if self.fecha_registro else None,
+            'duracion': self.duracion,
+            'edad': self.edad,
+            'como_se_entero': self.como_se_entero,
+            'como_se_entero_otro': self.como_se_entero_otro
          }
 
 # ---------------------------- Destino -----------------------------
@@ -111,7 +128,7 @@ class Idioma(db.Model):
     descripcion: Mapped[str] = mapped_column(String(255), nullable=False)
     imageUrl: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    cursos: Mapped[list['Curso']] = relationship('Curso', back_populates='idioma')
+    cursos: Mapped[list['Curso']] = relationship('Curso', secondary=curso_idioma, back_populates='idiomas')
 
     def serialize(self):
         return {
@@ -146,8 +163,11 @@ class Curso(db.Model):
         back_populates='cursos'
     )
 
-    idioma_id: Mapped[int] = mapped_column(Integer, ForeignKey('idioma.idIdioma'), nullable=False)
-    idioma: Mapped['Idioma'] = relationship('Idioma', back_populates='cursos')
+    idiomas: Mapped[list['Idioma']] = relationship(
+        'Idioma',
+        secondary=curso_idioma,
+        back_populates='cursos'
+    )
 
     def serialize(self):
         return {
@@ -160,7 +180,7 @@ class Curso(db.Model):
             'tipoCurso': self.tipoCurso,
             'edades': self.edades,
             'destinos': [d.serialize() for d in self.destinos],
-            'idioma': self.idioma.serialize() if self.idioma else None,
+            'idiomas': [i.serialize() for i in self.idiomas],
             'servicios': [s.serialize() for s in self.servicios]
         }
 

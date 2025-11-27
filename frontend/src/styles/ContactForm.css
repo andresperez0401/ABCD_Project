@@ -15,40 +15,124 @@
 
 .form-group {
   display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
   position: relative;
-  align-items: center;
-  flex-direction: row;
+  align-items: stretch;
 }
 
 .input-icon {
   position: absolute;
-  left: 15px;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: auto;
+  display: flex;
+  align-items: center;
   z-index: 2;
 }
 
 .icon {
-  font-size: 18px;
-  color: #9CBE30;
+  font-size: 20px;
+  color: #93BF21;
+  vertical-align: left;
 }
+
 
 .form-group input,
 .form-group textarea,
+.form-group select,
 .phone-input {
   width: 100%;
-  padding: 15px 15px 15px 45px;
+  padding: 15px 15px 15px 40px;
   border: 1px solid #e1e8ed;
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.2s;
   background: #f9fbfd;
   box-sizing: border-box;
+  font-family: inherit;
+  color: #222f3e;
+}
+
+.form-group select {
+  appearance: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: #f9fbfd;
+  color: #222f3e;
+  border: 1px solid #e1e8ed;
+  font-weight: 500;
+  text-align: left;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus,
+.phone-input:focus-within {
+  border-color: #9CBE30;
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+.form-group label.form-label {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: #222f3e;
+  margin-bottom: 4px;
+  margin-left: 2px;
+}
+
+/* ===== ICONOS A LA IZQUIERDA (FIX) ===== */
+.form-group{
+  position: relative;
+}
+
+.form-group .input-icon{
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* deja espacio a la izquierda para que no se monte el texto con el icono */
+.form-group input,
+.form-group select,
+.form-group textarea{
+  padding-left: 45px;
+}
+
+/* Textarea: icono arriba (se ve más natural) */
+.form-group.textarea-group .input-icon{
+  top: 18px;
+  transform: none;
+  align-items: flex-start;
+}
+
+
+.form-group input[name="howHeardOther"] {
+  background: #f9fbfd;
+  color: #222f3e;
+  border: 1px solid #e1e8ed;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.form-group input[name="howHeardOther"] {
+  text-align: left;
 }
 
 .form-group textarea {
   min-height: 100px;
   resize: vertical;
 }
+
 
 .form-group input:focus,
 .form-group textarea:focus,
@@ -66,7 +150,7 @@
 }
 
 .phone-input > input {
-  padding: 15px 15px 15px 45px !important;
+  padding: 15px 15px 15px 40px !important;
   width: 100% !important;
   border: 1px solid #e1e8ed !important;
   border-radius: 10px !important;
@@ -169,6 +253,17 @@
   position: relative;
 }
 
+.phone-input-container .PhoneInputInput{
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: 1px solid #e1e8ed;
+  border-radius: 10px;
+  background: #f9fbfd;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+
 .phone-input-element {
   width: 100% !important;
   padding: 15px 15px 15px 45px !important;
@@ -227,3 +322,4 @@
   position: absolute;
   left: 15px;
 }
+

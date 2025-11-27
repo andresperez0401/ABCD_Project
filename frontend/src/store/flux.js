@@ -136,7 +136,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       servicios: [],
       clientes: [],
       testimonios: [],
-      usuario: null
+      usuario: null,
+      
+      // Estado de carga
+      isLoading: true,
+      loadingMessage: "Cargando datos",
+      loadingProgress: 0
     },
     actions: {
       //-------------------------------------------------------------------------------------------
@@ -337,7 +342,60 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // Implementar updateDestino, deleteDestino siguiendo el mismo patrón...
+      /**
+       * Actualiza un destino existente
+       * @param {number} id - ID del destino
+       * @param {Object} updatedData - Datos actualizados
+       */
+      updateDestino: async (id, updatedData) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/destino/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${store.token}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const updatedDestinos = store.destinos.map(destino => destino.idDestino === id ? { ...destino, ...updatedData } : destino);
+            setStore({ ...getStore(), destinos: updatedDestinos });
+            return { success: true, message: "Destino actualizado", destino: data };
+          } else {
+            return { success: false, message: data.error || "Error al actualizar destino" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
+
+      /**
+       * Elimina un destino
+       * @param {number} id - ID del destino
+       */
+      deleteDestino: async (id) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/destino/${id}`, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${store.token}`
+            }
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const filteredDestinos = store.destinos.filter(destino => destino.idDestino !== id);
+            setStore({ ...getStore(), destinos: filteredDestinos });
+            return { success: true, message: "Destino eliminado" };
+          } else {
+            return { success: false, message: data.error || "Error al eliminar destino" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
 
       //-------------------------------------------------------------------------------------------
       // CIUDADES
@@ -419,7 +477,88 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // Implementar createIdioma, updateIdioma, deleteIdioma...
+      /**
+       * Crea un nuevo idioma
+       * @param {Object} idiomaData - Datos del idioma
+       */
+      createIdioma: async (idiomaData) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/idioma`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${store.token}`
+            },
+            body: JSON.stringify(idiomaData)
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const newIdiomas = [...store.idiomas, data];
+            setStore({ ...getStore(), idiomas: newIdiomas });
+            return { success: true, message: "Idioma creado" };
+          } else {
+            return { success: false, message: data.error || "Error al crear idioma" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
+
+      /**
+       * Actualiza un idioma existente
+       * @param {number} id - ID del idioma
+       * @param {Object} updatedData - Datos actualizados
+       */
+      updateIdioma: async (id, updatedData) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/idioma/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${store.token}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const updatedIdiomas = store.idiomas.map(idioma => idioma.idIdioma === id ? { ...idioma, ...updatedData } : idioma);
+            setStore({ ...getStore(), idiomas: updatedIdiomas });
+            return { success: true, message: "Idioma actualizado", idioma: data };
+          } else {
+            return { success: false, message: data.error || "Error al actualizar idioma" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
+
+      /**
+       * Elimina un idioma
+       * @param {number} id - ID del idioma
+       */
+      deleteIdioma: async (id) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/idioma/${id}`, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${store.token}`
+            }
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const filteredIdiomas = store.idiomas.filter(idioma => idioma.idIdioma !== id);
+            setStore({ ...getStore(), idiomas: filteredIdiomas });
+            return { success: true, message: "Idioma eliminado" };
+          } else {
+            return { success: false, message: data.error || "Error al eliminar idioma" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
 
       //-------------------------------------------------------------------------------------------
       // CURSOS
@@ -576,7 +715,88 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // Implementar createServicio, updateServicio, deleteServicio...
+      /**
+       * Crea un nuevo servicio
+       * @param {Object} servicioData - Datos del servicio
+       */
+      createServicio: async (servicioData) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/servicio`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${store.token}`
+            },
+            body: JSON.stringify(servicioData)
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const newServicios = [...store.servicios, data];
+            setStore({ ...getStore(), servicios: newServicios });
+            return { success: true, message: "Servicio creado" };
+          } else {
+            return { success: false, message: data.error || "Error al crear servicio" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
+
+      /**
+       * Actualiza un servicio existente
+       * @param {number} id - ID del servicio
+       * @param {Object} updatedData - Datos actualizados
+       */
+      updateServicio: async (id, updatedData) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/servicio/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${store.token}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const updatedServicios = store.servicios.map(servicio => servicio.idServicio === id ? { ...servicio, ...updatedData } : servicio);
+            setStore({ ...getStore(), servicios: updatedServicios });
+            return { success: true, message: "Servicio actualizado", servicio: data };
+          } else {
+            return { success: false, message: data.error || "Error al actualizar servicio" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
+
+      /**
+       * Elimina un servicio
+       * @param {number} id - ID del servicio
+       */
+      deleteServicio: async (id) => {
+        const store = getStore();
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/servicio/${id}`, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${store.token}`
+            }
+          });
+          const data = await response.json();
+          if (response.ok) {
+            const filteredServicios = store.servicios.filter(servicio => servicio.idServicio !== id);
+            setStore({ ...getStore(), servicios: filteredServicios });
+            return { success: true, message: "Servicio eliminado" };
+          } else {
+            return { success: false, message: data.error || "Error al eliminar servicio" };
+          }
+        } catch (error) {
+          return { success: false, message: "Error de conexión: " + error.message };
+        }
+      },
 
       //-------------------------------------------------------------------------------------------
       // CLIENTES
@@ -736,11 +956,27 @@ const getState = ({ getStore, getActions, setStore }) => {
        */
       initializeData: async () => {
         const actions = getActions();
-        await actions.getDestinos();
-        await actions.getIdiomas();
-        await actions.getCursos();
-        await actions.getServicios();
-        await actions.getTestimonios();
+        setStore({ isLoading: true, loadingMessage: "Cargando datos", loadingProgress: 0 });
+        
+        try {
+          // Cargar destinos, idiomas y servicios en paralelo (no dependen entre sí)
+          setStore({ loadingMessage: "Cargando información básica", loadingProgress: 20 });
+          await Promise.all([
+            actions.getDestinos(),
+            actions.getIdiomas(),
+            actions.getServicios(),
+            actions.getTestimonios()
+          ]);
+          
+          // Cargar cursos después (depende de destinos e idiomas)
+          setStore({ loadingMessage: "Cargando cursos", loadingProgress: 60 });
+          await actions.getCursos();
+          
+          setStore({ isLoading: false, loadingMessage: "Datos cargados", loadingProgress: 100 });
+        } catch (error) {
+          console.error("Error inicializando datos:", error);
+          setStore({ isLoading: false, loadingMessage: "Error al cargar", loadingProgress: 0 });
+        }
       },
 
       /**
