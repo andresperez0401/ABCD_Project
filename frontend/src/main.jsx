@@ -8,6 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const urlBase = import.meta.env.VITE_MATOMO_URL_BASE
 const siteId = Number(import.meta.env.VITE_MATOMO_SITE_ID || 1)
+console.log('[Matomo Debug] urlBase:', urlBase, 'siteId:', siteId)
 let matomo = null
 if (urlBase && typeof urlBase === 'string' && urlBase.startsWith('http')) {
   matomo = createInstance({
