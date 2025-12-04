@@ -6,17 +6,28 @@ import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
-const matomo = createInstance({
-  urlBase: import.meta.env.VITE_MATOMO_URL_BASE,
-  siteId: Number(import.meta.env.VITE_MATOMO_SITE_ID || 1),
-  trackerUrl: `${import.meta.env.VITE_MATOMO_URL_BASE}/matomo.php`,
-  srcUrl: `${import.meta.env.VITE_MATOMO_URL_BASE}/matomo.js`,
-})
+const urlBase = import.meta.env.VITE_MATOMO_URL_BASE
+const siteId = Number(import.meta.env.VITE_MATOMO_SITE_ID || 1)
+let matomo = null
+if (urlBase && typeof urlBase === 'string' && urlBase.startsWith('http')) {
+  matomo = createInstance({
+    urlBase,
+    siteId,
+    trackerUrl: `${urlBase}/matomo.php`,
+    srcUrl: `${urlBase}/matomo.js`,
+  })
+} else {
+  console.warn('Matomo disabled: VITE_MATOMO_URL_BASE is missing or invalid')
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <MatomoProvider value={matomo}>
+    {matomo ? (
+      <MatomoProvider value={matomo}>
+        <App />
+      </MatomoProvider>
+    ) : (
       <App />
-    </MatomoProvider>
+    )}
   </StrictMode>,
 )
