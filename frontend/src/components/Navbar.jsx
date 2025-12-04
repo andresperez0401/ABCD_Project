@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useMatomo } from '@datapunt/matomo-tracker-react'
 import { NavLink, useNavigate } from "react-router-dom"
 import "../styles/Navbar.css"
 import logo from "../images/abcd.jpg"
@@ -8,6 +9,8 @@ import logo from "../images/abcd.jpg"
 const Navbar = () => {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+
+  const { trackEvent } = useMatomo();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,7 +55,12 @@ const Navbar = () => {
                   <NavLink
                     to={link.to}
                     className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false)
+                      try {
+                        trackEvent({ category: 'Navbar', action: 'Click', name: link.label })
+                      } catch {}
+                    }}
                   >
                     {link.label}
                   </NavLink>

@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import './App.css'
 import { ToastContainer } from "react-toastify";
 import injectContext from "./store/appContext.jsx";
@@ -28,6 +30,7 @@ import AdminDestino from './components/AdminDestino.jsx';
 
 const AppContent = () => {
   const location = useLocation();
+  const { trackPageView } = useMatomo();
   const hideLayout = location.pathname === "/" ||
     location.pathname === "/signup" ||
     location.pathname === "/login" ||
@@ -35,6 +38,15 @@ const AppContent = () => {
     location.pathname.startsWith("/Canchas/") ||
     location.pathname === "/Configuraciones";
 
+
+  useEffect(() => {
+    try {
+      trackPageView({
+        documentTitle: document.title,
+        href: window.location.href,
+      });
+    } catch {}
+  }, [location.pathname, location.search]);
 
   return (
     <>
